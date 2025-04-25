@@ -1,4 +1,3 @@
-
 import AdminSidebar from "@/components/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,7 +45,7 @@ const BlogEditPost = () => {
       <div className="min-h-screen bg-gray-50 flex">
         <AdminSidebar />
         <main className="flex-1 ml-60">
-          <div className="container max-w-4xl mx-auto py-8 px-4">
+          <div className="max-w-[1200px] py-8 px-8">
             <div className="text-center py-12">
               <p>포스트를 불러오는 중...</p>
             </div>
@@ -60,7 +59,7 @@ const BlogEditPost = () => {
     <div className="min-h-screen bg-gray-50 flex">
       <AdminSidebar />
       <main className="flex-1 ml-60">
-        <div className="container max-w-4xl mx-auto py-8 px-4">
+        <div className="max-w-[1200px] py-8 px-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-bold text-purple-800">포스트 수정</h1>
             <Button
