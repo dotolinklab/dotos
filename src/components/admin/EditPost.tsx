@@ -59,7 +59,10 @@ const EditPost = ({ categories }: EditPostProps) => {
       
       if (imageUrl) {
         const imageTag = `![${file.name}](${imageUrl})`;
-        setContent(prev => prev + '\n\n' + imageTag + '\n\n');
+        setContent(prevContent => {
+          // Insert at current position if possible, otherwise append
+          return prevContent + imageTag;
+        });
         toast.success('이미지가 업로드되었습니다.');
       }
     } catch (error) {
