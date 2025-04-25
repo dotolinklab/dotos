@@ -34,8 +34,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="col-span-1">
             <Link to="/" className="flex items-center">
-              <img src="/logo.png" alt="알파블로그" className="h-8 w-8" />
-              <span className="text-xl font-bold ml-2">알파블로그</span>
+              <img src="/logo.png" alt="도토링크 블로그" className="h-8 w-8" />
+              <span className="text-xl font-bold ml-2">도토링크 블로그</span>
             </Link>
             <p className="mt-4 text-sm text-gray-600">
               심층 보도와 분석을 통해 인<br />
@@ -98,7 +98,7 @@ const Footer = () => {
         
         <div className="mt-12 pt-8 border-t">
           <p className="text-center text-sm text-gray-600">
-            © 2025 알파블로그. 모든 권리 보유.
+            © 2025 도토링크 블로그. 모든 권리 보유.
           </p>
         </div>
       </div>

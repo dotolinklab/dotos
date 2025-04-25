@@ -19,12 +19,10 @@ const Navigation = () => {
   const navLinks = [
     { name: "홈", href: "/" },
     { name: "블로그", href: "/blog" },
-    { name: "프리미엄", href: "/rental" },
-    { name: "GPTS 이용하기", href: "/learning" },
-    { name: "서비스", href: "/community" },
-    { name: "커뮤니티", href: "/contact" },
-    { name: "AI 플랫이", href: "/ai" },
-    { name: "유투브", href: "/youtube" },
+    { name: "렌탈솔루션", href: "/rental" },
+    { name: "업무배움터", href: "/learning" },
+    { name: "커뮤니티", href: "/community" },
+    { name: "Contact Us", href: "/contact" },
   ];
 
   return (
@@ -34,7 +32,7 @@ const Navigation = () => {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
               <img src="/logo.png" alt="Logo" className="h-8 w-8" />
-              <span className="text-white ml-2 text-xl font-bold">알파블로그</span>
+              <span className="text-white ml-2 text-xl font-bold">도토링크 블로그</span>
             </Link>
           </div>
           
