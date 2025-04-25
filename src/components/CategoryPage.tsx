@@ -14,6 +14,7 @@ interface Post {
   author: string;
   created_at: string;
   category: string;
+  thumbnail_url: string | null;
 }
 
 interface CategoryPageProps {
@@ -78,7 +79,6 @@ const CategoryPage = ({ title, description, category, icon }: CategoryPageProps)
     <div className="min-h-screen flex flex-col">
       <Navigation />
       
-      {/* Hero Section - Standardized with the same height as the main page */}
       <section className="pt-32 pb-20 px-4 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-900 to-purple-700 z-[-1]"></div>
         <div className="max-w-6xl mx-auto text-center z-10">
@@ -92,7 +92,6 @@ const CategoryPage = ({ title, description, category, icon }: CategoryPageProps)
         </div>
       </section>
 
-      {/* Posts Section */}
       <section className="py-20 px-4 bg-white flex-grow">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-12">{category} 포스트</h2>
@@ -107,35 +106,57 @@ const CategoryPage = ({ title, description, category, icon }: CategoryPageProps)
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post) => (
-                <Card key={post.id} className="border hover:shadow-lg transition-shadow overflow-hidden group">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="p-2 rounded-full bg-purple-100 text-purple-700">
-                        <IconComponent className="h-4 w-4" />
-                      </span>
-                      <span className="text-sm text-purple-700 font-medium">{post.category}</span>
-                    </div>
-                    <Link to={`${getCategoryPath(post.category)}/${post.id}`} className="block group-hover:text-purple-700 transition-colors">
-                      <h3 className="text-xl font-bold mb-3">
-                        {post.title}
-                      </h3>
-                    </Link>
-                    <p className="text-gray-600 mb-6 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
-                          <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
+              {posts.map((post) => {
+                const PostIcon = IconComponent;
+                return (
+                  <Link 
+                    to={`${getCategoryPath(post.category)}/${post.id}`}
+                    key={post.id}
+                    className="block hover:no-underline"
+                  >
+                    <Card className="border hover:shadow-lg transition-shadow overflow-hidden group h-full">
+                      <CardContent className="p-0">
+                        {post.thumbnail_url ? (
+                          <div className="aspect-[16/9] relative overflow-hidden">
+                            <img 
+                              src={post.thumbnail_url} 
+                              alt={post.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="aspect-[16/9] bg-purple-100 flex items-center justify-center">
+                            <PostIcon className="h-12 w-12 text-purple-300" />
+                          </div>
+                        )}
+                        <div className="p-6">
+                          <div className="flex items-center gap-2 mb-4">
+                            <span className="p-2 rounded-full bg-purple-100 text-purple-700">
+                              <PostIcon className="h-4 w-4" />
+                            </span>
+                            <span className="text-sm text-purple-700 font-medium">{post.category}</span>
+                          </div>
+                          <h3 className="text-xl font-bold mb-3 group-hover:text-purple-700 transition-colors">
+                            {post.title}
+                          </h3>
+                          <p className="text-gray-600 mb-6 line-clamp-3">
+                            {post.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between text-sm text-gray-500">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
+                                <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
+                              </div>
+                              <span>{post.author}</span>
+                            </div>
+                            <span>{formatDate(post.created_at)}</span>
+                          </div>
                         </div>
-                        <span>{post.author}</span>
-                      </div>
-                      <span>{formatDate(post.created_at)}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>
