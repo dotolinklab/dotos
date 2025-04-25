@@ -10,12 +10,6 @@ import BlogSettings from '@/components/admin/BlogSettings';
 
 const BlogAdmin = () => {
   const [categories, setCategories] = useState(['AI 소식', '부업하기', '렌탈솔루션', '배움터']);
-  const [posts] = useState([
-    { id: 1, title: 'ChatGPT-5 출시', category: 'AI 소식', date: '2025-04-21', status: '게시됨' },
-    { id: 2, title: '2025년 가장 수익성 높은 온라인 부업 TOP 5', category: '부업하기', date: '2025-04-18', status: '게시됨' },
-    { id: 3, title: '비개발자를 위한 AI 활용법: 기초 가이드', category: '배움터', date: '2025-04-15', status: '게시됨' },
-    { id: 4, title: '임시 저장된 글', category: '렌탈솔루션', date: '2025-04-22', status: '임시저장' },
-  ]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -55,7 +49,7 @@ const BlogAdmin = () => {
             </TabsList>
 
             <TabsContent value="dashboard">
-              <AdminDashboard posts={posts} categories={categories} />
+              <AdminDashboard categories={categories} />
             </TabsContent>
 
             <TabsContent value="posts">
@@ -70,7 +64,6 @@ const BlogAdmin = () => {
               <BlogSettings 
                 categories={categories} 
                 setCategories={setCategories}
-                posts={posts}
               />
             </TabsContent>
           </Tabs>

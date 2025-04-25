@@ -1,37 +1,78 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, Activity, Briefcase, Rocket } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Post {
+  id: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  created_at: string;
+  category: string;
+}
+
 const Index = () => {
-  const featuredPosts = [{
-    category: "AI 소식",
-    title: "ChatGPT-5 출시: 혁신적인 자연어 처리 능력의 발전",
-    excerpt: "OpenAI의 최신 모델은 이전 버전보다 훨씬 더 정확하고 자연스러운 대화를 가능하게 합니다.",
-    author: "김기술",
-    date: "2025년 4월 21일",
-    icon: Activity,
-    href: "/ai-news/chatgpt-5"
-  }, {
-    category: "부업하기",
-    title: "2025년 가장 수익성 높은 온라인 부업 TOP 5",
-    excerpt: "재택근무가 가능한 고수익 부업을 소개합니다. AI 기술을 활용한 새로운 기회들을 놓치지 마세요.",
-    author: "박부업",
-    date: "2025년 4월 18일",
-    icon: Briefcase,
-    href: "/side-hustles/top-5"
-  }, {
-    category: "배움터",
-    title: "비개발자를 위한 AI 활용법: 기초 가이드",
-    excerpt: "프로그래밍 지식이 없어도 AI 도구를 효과적으로 사용하는 방법을 알아봅니다.",
-    author: "이학습",
-    date: "2025년 4월 15일",
-    icon: BookOpen,
-    href: "/learning/ai-basics"
-  }];
-  return <div className="min-h-screen flex flex-col">
+  const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (error) throw error;
+        setFeaturedPosts(data || []);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const getCategoryIcon = (category: string) => {
+    switch(category) {
+      case 'AI 소식': return Activity;
+      case '부업하기': return Briefcase;
+      case '렌탈솔루션': return Rocket;
+      case '배움터': return BookOpen;
+      default: return Activity;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getCategoryUrl = (category: string) => {
+    switch(category) {
+      case 'AI 소식': return '/ai-news';
+      case '부업하기': return '/side-hustles';
+      case '렌탈솔루션': return '/rental';
+      case '배움터': return '/learning';
+      default: return '/';
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <Navigation />
       
       {/* Hero Section */}
@@ -50,10 +91,10 @@ const Index = () => {
             <Button asChild size="lg" className="bg-white text-purple-700 hover:bg-purple-50">
               <Link to="/ai-news">최신 AI 소식 보기</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white/50 text-purple-700 hover:bg-white/10 hover:text-purple-600">
+            <Button asChild variant="outline" size="lg" className="border-white/50 text-white hover:bg-white/10 hover:text-white">
               <Link to="/learning" className="flex items-center">
                 학습 가이드 보기
-                <ArrowRight className="ml-2 h-4 w-4 text-purple-700" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -70,35 +111,53 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredPosts.map((post, index) => <Card key={index} className="border hover:shadow-lg transition-shadow overflow-hidden group">
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className={`p-2 rounded-full bg-purple-100 text-purple-700`}>
-                      <post.icon className="h-4 w-4" />
-                    </span>
-                    <span className="text-sm text-purple-700 font-medium">{post.category}</span>
-                  </div>
-                  <Link to={post.href} className="block group-hover:text-purple-700 transition-colors">
-                    <h3 className="text-xl font-bold mb-3">
-                      {post.title}
-                    </h3>
-                  </Link>
-                  <p className="text-gray-600 mb-6 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
-                        <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
+          {isLoading ? (
+            <div className="text-center py-10">
+              <p className="text-gray-500">포스트를 불러오는 중...</p>
+            </div>
+          ) : featuredPosts.length === 0 ? (
+            <div className="text-center py-10">
+              <p className="text-gray-500">표시할 포스트가 없습니다.</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8">
+              {featuredPosts.map((post) => {
+                const PostIcon = getCategoryIcon(post.category);
+                return (
+                  <Card key={post.id} className="border hover:shadow-lg transition-shadow overflow-hidden group">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="p-2 rounded-full bg-purple-100 text-purple-700">
+                          <PostIcon className="h-4 w-4" />
+                        </span>
+                        <span className="text-sm text-purple-700 font-medium">{post.category}</span>
                       </div>
-                      <span>{post.author}</span>
-                    </div>
-                    <span>{post.date}</span>
-                  </div>
-                </div>
-              </Card>)}
-          </div>
+                      <Link 
+                        to={`${getCategoryUrl(post.category)}/${post.id}`} 
+                        className="block group-hover:text-purple-700 transition-colors"
+                      >
+                        <h3 className="text-xl font-bold mb-3">
+                          {post.title}
+                        </h3>
+                      </Link>
+                      <p className="text-gray-600 mb-6 line-clamp-3">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
+                            <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
+                          </div>
+                          <span>{post.author}</span>
+                        </div>
+                        <span>{formatDate(post.created_at)}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -109,26 +168,27 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[{
-            title: "AI 소식",
-            description: "최신 인공지능 소식과 트렌드",
-            icon: Activity,
-            href: "/ai-news"
-          }, {
-            title: "부업하기",
-            description: "AI를 활용한 수익 창출 방법",
-            icon: Briefcase,
-            href: "/side-hustles"
-          }, {
-            title: "렌탈솔루션",
-            description: "필요한 장비 및 솔루션 렌탈",
-            icon: Rocket,
-            href: "/rental"
-          }, {
-            title: "배움터",
-            description: "AI와 관련된 학습 자료",
-            icon: BookOpen,
-            href: "/learning"
-          }].map((category, index) => <Link to={category.href} key={index} className="group">
+              title: "AI 소식",
+              description: "최신 인공지능 소식과 트렌드",
+              icon: Activity,
+              href: "/ai-news"
+            }, {
+              title: "부업하기",
+              description: "AI를 활용한 수익 창출 방법",
+              icon: Briefcase,
+              href: "/side-hustles"
+            }, {
+              title: "렌탈솔루션",
+              description: "필요한 장비 및 솔루션 렌탈",
+              icon: Rocket,
+              href: "/rental"
+            }, {
+              title: "배움터",
+              description: "AI와 관련된 학습 자료",
+              icon: BookOpen,
+              href: "/learning"
+            }].map((category, index) => (
+              <Link to={category.href} key={index} className="group">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
                   <div className="mb-4 p-3 rounded-full bg-purple-100 w-fit">
                     <category.icon className="h-6 w-6 text-purple-700" />
@@ -140,7 +200,8 @@ const Index = () => {
                     <ArrowRight className="ml-1 h-4 w-4" />
                   </div>
                 </div>
-              </Link>)}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -158,6 +219,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
