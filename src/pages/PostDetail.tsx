@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ReactMarkdown from 'react-markdown';
 
 interface Post {
   id: string;
@@ -122,7 +123,7 @@ const PostDetail = () => {
               )}
               
               <div className="prose prose-purple max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                <ReactMarkdown>{post.content}</ReactMarkdown>
               </div>
             </>
           ) : (
