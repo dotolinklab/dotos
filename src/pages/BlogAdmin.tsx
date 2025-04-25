@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Navigation from '@/components/Navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +10,7 @@ import WritePost from '@/components/admin/WritePost';
 import BlogSettings from '@/components/admin/BlogSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Post {
   id: string;
@@ -22,6 +23,7 @@ interface Post {
 const BlogAdmin = () => {
   const [categories, setCategories] = useState(['AI 소식', '부업하기', '렌탈솔루션', '배움터']);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const isMobile = useIsMobile();
 
   // Use react-query for data fetching
   const { 
@@ -63,43 +65,43 @@ const BlogAdmin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
-      <section className="pt-32 pb-16 px-4 bg-gradient-to-r from-purple-700 to-purple-500 text-white">
+      <section className="pt-24 md:pt-32 pb-10 md:pb-16 px-4 bg-gradient-to-r from-purple-700 to-purple-500 text-white">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 flex items-center gap-4">
-            <Pencil className="w-8 h-8" />
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 flex items-center gap-4">
+            <Pencil className="w-6 h-6 md:w-8 md:h-8" />
             블로그 관리
           </h1>
-          <p className="text-lg text-purple-100 max-w-2xl mb-8">
+          <p className="text-base md:text-lg text-purple-100 max-w-2xl mb-4 md:mb-8">
             새로운 블로그 포스트를 작성하고 관리하세요
           </p>
         </div>
       </section>
 
-      <section className="py-12 px-4">
+      <section className="py-6 md:py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <Tabs 
             value={activeTab} 
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="mb-8 bg-purple-50">
+            <TabsList className="mb-6 md:mb-8 bg-white border shadow-sm">
               <TabsTrigger value="dashboard" className="flex items-center gap-2">
                 <LayoutDashboard className="w-4 h-4" />
-                대시보드
+                {!isMobile && "대시보드"}
               </TabsTrigger>
               <TabsTrigger value="posts" className="flex items-center gap-2">
                 <FileText className="w-4 h-4" />
-                포스트 관리
+                {!isMobile && "포스트 관리"}
               </TabsTrigger>
               <TabsTrigger value="write" className="flex items-center gap-2">
                 <Pencil className="w-4 h-4" />
-                글쓰기
+                {!isMobile && "글쓰기"}
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
-                설정
+                {!isMobile && "설정"}
               </TabsTrigger>
             </TabsList>
 
