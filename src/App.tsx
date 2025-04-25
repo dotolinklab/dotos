@@ -3,10 +3,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Blog from "./pages/Blog";
+import AiNews from "./pages/AiNews";
+import SideHustles from "./pages/SideHustles";
 import RentalSolution from "./pages/RentalSolution";
 import Learning from "./pages/Learning";
-import Community from "./pages/Community";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,10 +22,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/ai-news" element={<AiNews />} />
+          <Route path="/side-hustles" element={<SideHustles />} />
           <Route path="/rental" element={<RentalSolution />} />
           <Route path="/learning" element={<Learning />} />
-          <Route path="/community" element={<Community />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

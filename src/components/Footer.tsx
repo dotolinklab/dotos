@@ -3,52 +3,46 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const footerLinks = {
-    blog: [
-      { name: "전체보기", href: "/blog/all" },
-      { name: "최신 AI소식", href: "/blog/ai-news" },
-      { name: "화제의 이슈", href: "/blog/trending" },
-      { name: "라이프스타일", href: "/blog/lifestyle" },
+    main: [
+      { name: "홈", href: "/" },
+      { name: "AI 소식", href: "/ai-news" },
+      { name: "부업하기", href: "/side-hustles" },
+      { name: "렌탈솔루션", href: "/rental" },
+      { name: "배움터", href: "/learning" },
     ],
-    gpts: [
-      { name: "초보자 가이드", href: "/gpts/guide" },
-      { name: "블로그 GPTS", href: "/gpts/blog" },
-      { name: "그 외 GPTS", href: "/gpts/others" },
-      { name: "다운로드", href: "/gpts/download" },
+    resources: [
+      { name: "AI 트렌드", href: "/ai-news/trends" },
+      { name: "학습자료", href: "/learning/resources" },
+      { name: "가이드라인", href: "/learning/guidelines" },
+      { name: "FAQ", href: "/faq" },
     ],
-    service: [
-      { name: "전체서비스", href: "/services" },
-      { name: "유튜브 자막 추출", href: "/services/youtube-subtitle" },
-      { name: "URL 단축", href: "/services/url-shortener" },
-      { name: "블로그 배포 생성기", href: "/services/blog-generator" },
-    ],
-    community: [
-      { name: "실시간 채팅", href: "/community/chat" },
-      { name: "오픈 채팅방", href: "/community/open-chat" },
-      { name: "비즈니스 문의", href: "/community/business" },
+    legal: [
+      { name: "개인정보 처리방침", href: "/privacy" },
+      { name: "이용약관", href: "/terms" },
+      { name: "쿠키 정책", href: "/cookies" },
     ],
   };
 
   return (
-    <footer className="bg-white pt-16 pb-12 border-t">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+    <footer className="bg-white border-t border-gray-200 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
             <Link to="/" className="flex items-center">
-              <img src="/logo.png" alt="도토링크 블로그" className="h-8 w-8" />
-              <span className="text-xl font-bold ml-2">도토링크 블로그</span>
+              <span className="text-xl font-bold text-purple-700">My Personal Blog</span>
             </Link>
             <p className="mt-4 text-sm text-gray-600">
-              심층 보도와 분석을 통해 인<br />
-              공지능의 미래를 탐색합니다.
+              AI 최신 소식과 부업, 렌탈, 그리고<br />
+              다양한 학습 자료를 제공합니다.
             </p>
           </div>
           
           <div className="space-y-4">
-            <h3 className="font-bold text-gray-900">블로그</h3>
+            <h3 className="font-bold text-gray-900">메뉴</h3>
             <ul className="space-y-2">
-              {footerLinks.blog.map((link) => (
+              {footerLinks.main.map((link) => (
                 <li key={link.href}>
-                  <Link to={link.href} className="text-sm text-gray-600 hover:text-gray-900">
+                  <Link to={link.href} className="text-sm text-gray-600 hover:text-purple-700">
                     {link.name}
                   </Link>
                 </li>
@@ -57,11 +51,11 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-bold text-gray-900">GPTS 이용하기</h3>
+            <h3 className="font-bold text-gray-900">자료실</h3>
             <ul className="space-y-2">
-              {footerLinks.gpts.map((link) => (
+              {footerLinks.resources.map((link) => (
                 <li key={link.href}>
-                  <Link to={link.href} className="text-sm text-gray-600 hover:text-gray-900">
+                  <Link to={link.href} className="text-sm text-gray-600 hover:text-purple-700">
                     {link.name}
                   </Link>
                 </li>
@@ -70,35 +64,30 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-bold text-gray-900">서비스</h3>
+            <h3 className="font-bold text-gray-900">법적 고지</h3>
             <ul className="space-y-2">
-              {footerLinks.service.map((link) => (
+              {footerLinks.legal.map((link) => (
                 <li key={link.href}>
-                  <Link to={link.href} className="text-sm text-gray-600 hover:text-gray-900">
+                  <Link to={link.href} className="text-sm text-gray-600 hover:text-purple-700">
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="font-bold text-gray-900">커뮤니티</h3>
-            <ul className="space-y-2">
-              {footerLinks.community.map((link) => (
-                <li key={link.href}>
-                  <Link to={link.href} className="text-sm text-gray-600 hover:text-gray-900">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="pt-4">
+              <Link to="/contact" className="inline-flex items-center text-sm font-medium text-purple-700 hover:text-purple-600">
+                문의하기
+                <svg className="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-12 pt-8 border-t border-gray-200">
           <p className="text-center text-sm text-gray-600">
-            © 2025 도토링크 블로그. 모든 권리 보유.
+            &copy; {new Date().getFullYear()} My Personal Blog. All rights reserved.
           </p>
         </div>
       </div>
