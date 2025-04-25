@@ -13,6 +13,7 @@ import BlogAdmin from "./pages/BlogAdmin";
 import PostDetail from "./pages/PostDetail";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import EditBlogPost from "./pages/EditBlogPost";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/learning/:postId" element={<PostDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
+          <Route path="/admin/blog/edit/:postId" element={<EditBlogPost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface Post {
   id: string;
@@ -20,6 +21,7 @@ interface PostManagementProps {
 const PostManagement = ({ categories }: PostManagementProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchPosts = async () => {
     try {
@@ -59,6 +61,10 @@ const PostManagement = ({ categories }: PostManagementProps) => {
       console.error('Error deleting post:', error);
       toast.error('포스트 삭제 중 오류가 발생했습니다.');
     }
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/admin/blog/edit/${id}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -116,7 +122,13 @@ const PostManagement = ({ categories }: PostManagementProps) => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">수정</Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleEdit(post.id)}
+                      >
+                        수정
+                      </Button>
                       <Button 
                         variant="outline" 
                         size="sm" 
