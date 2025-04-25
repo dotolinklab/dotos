@@ -51,7 +51,12 @@ const WritePost = ({ categories }: WritePostProps) => {
 
       if (error) throw error;
 
-      const imageUrl = `${window.location.origin}/storage/v1/object/public/postimg/${fileName}`;
+      // Supabase Storage URL 생성
+      const { data: publicUrlData } = supabase.storage
+        .from('postimg')
+        .getPublicUrl(fileName);
+
+      const imageUrl = publicUrlData.publicUrl;
       const imageTag = `\n![${file.name}](${imageUrl})\n`;
       
       setContent(prev => prev + imageTag);
@@ -78,7 +83,12 @@ const WritePost = ({ categories }: WritePostProps) => {
 
         if (uploadError) throw uploadError;
         
-        thumbnailUrl = `${window.location.origin}/storage/v1/object/public/images/${fileName}`;
+        // Supabase Storage URL 생성
+        const { data: publicUrlData } = supabase.storage
+          .from('images')
+          .getPublicUrl(fileName);
+
+        thumbnailUrl = publicUrlData.publicUrl;
       }
 
       // Create excerpt from content (first 150 characters)
