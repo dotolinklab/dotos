@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -9,6 +10,7 @@ import Learning from "./pages/Learning";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import BlogAdmin from "./pages/BlogAdmin";
+import PostDetail from "./pages/PostDetail";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 
@@ -23,9 +25,13 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/ai-news" element={<AiNews />} />
+          <Route path="/ai-news/:postId" element={<PostDetail />} />
           <Route path="/side-hustles" element={<SideHustles />} />
+          <Route path="/side-hustles/:postId" element={<PostDetail />} />
           <Route path="/rental" element={<RentalSolution />} />
+          <Route path="/rental/:postId" element={<PostDetail />} />
           <Route path="/learning" element={<Learning />} />
+          <Route path="/learning/:postId" element={<PostDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
           <Route path="*" element={<NotFound />} />

@@ -64,6 +64,16 @@ const CategoryPage = ({ title, description, category, icon }: CategoryPageProps)
     });
   };
 
+  const getCategoryPath = (category: string) => {
+    switch(category) {
+      case 'AI 소식': return '/ai-news';
+      case '부업하기': return '/side-hustles';
+      case '렌탈솔루션': return '/rental';
+      case '배움터': return '/learning';
+      default: return '/';
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -106,7 +116,7 @@ const CategoryPage = ({ title, description, category, icon }: CategoryPageProps)
                       </span>
                       <span className="text-sm text-purple-700 font-medium">{post.category}</span>
                     </div>
-                    <Link to={`/${post.category.toLowerCase().replace(/\s+/g, '-')}/${post.id}`} className="block group-hover:text-purple-700 transition-colors">
+                    <Link to={`${getCategoryPath(post.category)}/${post.id}`} className="block group-hover:text-purple-700 transition-colors">
                       <h3 className="text-xl font-bold mb-3">
                         {post.title}
                       </h3>
