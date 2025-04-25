@@ -85,7 +85,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       fontFamily: {
-        sans: ['Paperlogy', 'system-ui', 'sans-serif'],
+        sans: ['Noto Sans KR', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
