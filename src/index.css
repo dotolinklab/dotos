@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,6 +8,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -14,6 +16,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -21,6 +24,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -28,6 +32,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -35,6 +40,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-ExtraLight.ttf') format('truetype');
   font-weight: 200;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -42,6 +48,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -49,6 +56,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-ExtraBold.ttf') format('truetype');
   font-weight: 800;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -56,6 +64,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -63,6 +72,7 @@
   src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy-Thin.ttf') format('truetype');
   font-weight: 100;
   font-style: normal;
+  font-display: swap;
 }
 
 @layer base {
@@ -153,8 +163,12 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Paperlogy', system-ui, sans-serif;
+    @apply bg-background text-foreground;
+    font-family: 'Paperlogy', system-ui, sans-serif !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    font-family: 'Paperlogy', system-ui, sans-serif !important;
   }
 }
 
