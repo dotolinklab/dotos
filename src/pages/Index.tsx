@@ -59,8 +59,13 @@ const Index = () => {
             <Button asChild size="lg" className="bg-white text-purple-700 hover:bg-purple-50">
               <Link to="/ai-news">최신 AI 소식 보기</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-white border-white hover:bg-white/10">
-              <Link to="/learning">
+            <Button 
+              asChild 
+              variant="outline" 
+              size="lg" 
+              className="border-white/50 text-white hover:bg-white/10 hover:text-white"
+            >
+              <Link to="/learning" className="flex items-center">
                 학습 가이드 보기
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -165,3 +170,4 @@ const Index = () => {
 };
 
 export default Index;
+
