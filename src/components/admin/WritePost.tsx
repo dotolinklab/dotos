@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, Image } from 'lucide-react';
+import ThumbnailUpload from './ThumbnailUpload';
+import PostEditor from './PostEditor';
+import { useSupabaseStorage } from '@/hooks/useSupabaseStorage';
 
 interface WritePostProps {
   categories: string[];
@@ -20,14 +21,12 @@ const WritePost = ({ categories }: WritePostProps) => {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
 
+  const { uploadFile: uploadToImages } = useSupabaseStorage('images');
+  const { uploadFile: uploadToPostImg } = useSupabaseStorage('postimg');
+
   const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (!file.type.includes('image/')) {
-      toast.error('이미지 파일만 업로드할 수 있습니다.');
-      return;
-    }
 
     setThumbnail(file);
     setThumbnailPreview(URL.createObjectURL(file));
@@ -37,33 +36,11 @@ const WritePost = ({ categories }: WritePostProps) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.includes('image/')) {
-      toast.error('이미지 파일만 업로드할 수 있습니다.');
-      return;
-    }
-
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const { data, error } = await supabase.storage
-        .from('postimg')
-        .upload(fileName, file);
-
-      if (error) throw error;
-
-      // Supabase Storage URL 생성
-      const { data: publicUrlData } = supabase.storage
-        .from('postimg')
-        .getPublicUrl(fileName);
-
-      const imageUrl = publicUrlData.publicUrl;
+    const imageUrl = await uploadToPostImg(file);
+    if (imageUrl) {
       const imageTag = `\n![${file.name}](${imageUrl})\n`;
-      
       setContent(prev => prev + imageTag);
       toast.success('이미지가 업로드되었습니다.');
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error('이미지 업로드 중 오류가 발생했습니다.');
     }
   };
 
@@ -75,23 +52,10 @@ const WritePost = ({ categories }: WritePostProps) => {
       let thumbnailUrl = '';
       
       if (thumbnail) {
-        const fileExt = thumbnail.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const { data, error: uploadError } = await supabase.storage
-          .from('images')
-          .upload(fileName, thumbnail);
-
-        if (uploadError) throw uploadError;
-        
-        // Supabase Storage URL 생성
-        const { data: publicUrlData } = supabase.storage
-          .from('images')
-          .getPublicUrl(fileName);
-
-        thumbnailUrl = publicUrlData.publicUrl;
+        thumbnailUrl = await uploadToImages(thumbnail) || '';
       }
 
-      // Create excerpt from content (first 150 characters)
+      // Create excerpt from content
       const excerpt = content.substring(0, 150) + (content.length > 150 ? '...' : '');
 
       const { error } = await supabase
@@ -136,36 +100,10 @@ const WritePost = ({ categories }: WritePostProps) => {
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="thumbnail">썸네일 이미지</Label>
-          <div className="flex items-center gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => document.getElementById('thumbnail')?.click()}
-              className="w-full"
-            >
-              <Upload className="mr-2" />
-              썸네일 업로드
-            </Button>
-            <input
-              type="file"
-              id="thumbnail"
-              accept="image/*"
-              className="hidden"
-              onChange={handleThumbnailChange}
-            />
-          </div>
-          {thumbnailPreview && (
-            <div className="mt-4">
-              <img 
-                src={thumbnailPreview} 
-                alt="Thumbnail preview" 
-                className="w-full max-w-md rounded-lg shadow-sm"
-              />
-            </div>
-          )}
-        </div>
+        <ThumbnailUpload 
+          thumbnailPreview={thumbnailPreview}
+          onThumbnailChange={handleThumbnailChange}
+        />
 
         <div className="space-y-2">
           <Label htmlFor="category">카테고리</Label>
@@ -182,34 +120,11 @@ const WritePost = ({ categories }: WritePostProps) => {
           </select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="content">내용</Label>
-          <div className="flex items-center gap-4 mb-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => document.getElementById('content-image')?.click()}
-            >
-              <Image className="mr-2" />
-              이미지 추가
-            </Button>
-            <input
-              type="file"
-              id="content-image"
-              accept="image/*"
-              className="hidden"
-              onChange={handleContentImageUpload}
-            />
-          </div>
-          <Textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="블로그 내용을 입력하세요"
-            className="min-h-[400px] text-base"
-            required
-          />
-        </div>
+        <PostEditor
+          content={content}
+          onContentChange={(e) => setContent(e.target.value)}
+          onImageUpload={handleContentImageUpload}
+        />
 
         <div className="flex justify-end gap-4">
           <Button
