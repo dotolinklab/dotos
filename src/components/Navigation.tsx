@@ -17,54 +17,56 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { name: "HOME", href: "/" },
-    { name: "BLOG", href: "/blog" },
-    { name: "RENTAL SOLUTION", href: "/rental" },
-    { name: "LEARNING", href: "/learning" },
-    { name: "COMMUNITY", href: "/community" },
-    { name: "CONTACT US", href: "/contact" },
+    { name: "홈", href: "/" },
+    { name: "블로그", href: "/blog" },
+    { name: "프리미엄", href: "/rental" },
+    { name: "GPTS 이용하기", href: "/learning" },
+    { name: "서비스", href: "/community" },
+    { name: "커뮤니티", href: "/contact" },
+    { name: "AI 플랫이", href: "/ai" },
+    { name: "유투브", href: "/youtube" },
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-[#1A1F2C]' : 'bg-[#1A1F2C]'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <Link to="/" className="text-xl font-bold">LOGO</Link>
+            <Link to="/" className="flex items-center">
+              <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+              <span className="text-white ml-2 text-xl font-bold">알파블로그</span>
+            </Link>
           </div>
           
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm hover:text-gray-600 transition-colors duration-200"
+                className="text-gray-300 hover:text-white text-sm transition-colors duration-200"
               >
                 {link.name}
               </Link>
             ))}
           </div>
 
-          {/* Mobile menu button */}
           <Button
             variant="ghost"
-            className="md:hidden"
+            className="md:hidden text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <Menu className="h-6 w-6" />
           </Button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-[#1A1F2C]">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="block px-3 py-2 text-sm hover:bg-gray-50"
+                  className="block px-3 py-2 text-gray-300 hover:text-white text-sm"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
