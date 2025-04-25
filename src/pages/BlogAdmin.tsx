@@ -80,8 +80,8 @@ const BlogAdmin = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <AdminSidebar />
-      <main className="flex-1 ml-60 pl-8 pr-8">
-        <div className="container max-w-4xl mx-auto py-8">
+      <main className="flex-1 ml-60">
+        <div className="max-w-[1200px] py-8 px-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-bold text-purple-800">블로그 포스트 작성</h1>
             <Button

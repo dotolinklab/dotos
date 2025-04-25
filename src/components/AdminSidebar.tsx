@@ -6,7 +6,7 @@ const AdminSidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-60 bg-sidebar border-r shadow-sm">
       <div className="p-6">
-        <h1 className="text-xl font-bold text-purple-800">알파고 관리자</h1>
+        <h1 className="text-xl font-bold text-purple-800">도도링크 관리자</h1>
       </div>
       <nav className="px-3 py-2">
         <NavLink
