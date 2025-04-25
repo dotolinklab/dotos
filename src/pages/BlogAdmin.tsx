@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LayoutDashboard, FileText, Pencil, Settings } from 'lucide-react';
@@ -7,9 +7,48 @@ import AdminDashboard from '@/components/admin/AdminDashboard';
 import PostManagement from '@/components/admin/PostManagement';
 import WritePost from '@/components/admin/WritePost';
 import BlogSettings from '@/components/admin/BlogSettings';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Post {
+  id: string;
+  title: string;
+  category: string;
+  created_at: string;
+  status: string;
+}
 
 const BlogAdmin = () => {
   const [categories, setCategories] = useState(['AI 소식', '부업하기', '렌탈솔루션', '배움터']);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('id, title, category, created_at, status');
+
+        if (error) throw error;
+        setPosts(data || []);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  // Convert Supabase posts to the format expected by components
+  const formattedPosts = posts.map(post => ({
+    id: post.id,
+    title: post.title,
+    category: post.category,
+    date: post.created_at,
+    status: post.status
+  }));
 
   return (
     <div className="min-h-screen bg-white">
@@ -49,7 +88,10 @@ const BlogAdmin = () => {
             </TabsList>
 
             <TabsContent value="dashboard">
-              <AdminDashboard categories={categories} />
+              <AdminDashboard 
+                categories={categories} 
+                posts={formattedPosts}
+              />
             </TabsContent>
 
             <TabsContent value="posts">
@@ -64,6 +106,7 @@ const BlogAdmin = () => {
               <BlogSettings 
                 categories={categories} 
                 setCategories={setCategories}
+                posts={formattedPosts}
               />
             </TabsContent>
           </Tabs>
