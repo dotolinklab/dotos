@@ -15,6 +15,7 @@ interface Post {
   created_at: string;
   category: string;
   excerpt: string | null;
+  thumbnail_url: string | null;
 }
 
 const PostDetail = () => {
@@ -109,6 +110,16 @@ const PostDetail = () => {
                   <span>{formatDate(post.created_at)}</span>
                 </div>
               </div>
+              
+              {post.thumbnail_url && (
+                <div className="mb-8 overflow-hidden rounded-lg">
+                  <img 
+                    src={post.thumbnail_url} 
+                    alt={post.title}
+                    className="w-full h-auto"
+                  />
+                </div>
+              )}
               
               <div className="prose prose-purple max-w-none">
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
