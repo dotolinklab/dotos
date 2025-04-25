@@ -104,11 +104,11 @@ const BlogPostsList = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[60%]">제목</TableHead>
-                    <TableHead>카테고리</TableHead>
-                    <TableHead>작성일</TableHead>
-                    <TableHead>상태</TableHead>
-                    <TableHead className="text-right">관리</TableHead>
+                    <TableHead className="w-[45%]">제목</TableHead>
+                    <TableHead className="w-[15%]">카테고리</TableHead>
+                    <TableHead className="w-[15%]">작성일</TableHead>
+                    <TableHead className="w-[15%]">상태</TableHead>
+                    <TableHead className="w-[10%] text-right">관리</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
