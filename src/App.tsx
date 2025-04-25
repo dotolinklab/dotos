@@ -13,34 +13,38 @@ import BlogAdmin from "./pages/BlogAdmin";
 import BlogPostsList from "./pages/BlogPostsList";
 import BlogEditPost from "./pages/BlogEditPost";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
+// Create a new QueryClient instance
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/ai-news" element={<AiNews />} />
-          <Route path="/ai-news/:postId" element={<PostDetail />} />
-          <Route path="/side-hustles" element={<SideHustles />} />
-          <Route path="/side-hustles/:postId" element={<PostDetail />} />
-          <Route path="/rental" element={<RentalSolution />} />
-          <Route path="/rental/:postId" element={<PostDetail />} />
-          <Route path="/learning" element={<Learning />} />
-          <Route path="/learning/:postId" element={<PostDetail />} />
-          <Route path="/admin/blog" element={<BlogAdmin />} />
-          <Route path="/admin/blog/posts" element={<BlogPostsList />} />
-          <Route path="/admin/blog/edit/:postId" element={<BlogEditPost />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    // Wrap everything in QueryClientProvider correctly
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/ai-news" element={<AiNews />} />
+            <Route path="/ai-news/:postId" element={<PostDetail />} />
+            <Route path="/side-hustles" element={<SideHustles />} />
+            <Route path="/side-hustles/:postId" element={<PostDetail />} />
+            <Route path="/rental" element={<RentalSolution />} />
+            <Route path="/rental/:postId" element={<PostDetail />} />
+            <Route path="/learning" element={<Learning />} />
+            <Route path="/learning/:postId" element={<PostDetail />} />
+            <Route path="/admin/blog" element={<BlogAdmin />} />
+            <Route path="/admin/blog/posts" element={<BlogPostsList />} />
+            <Route path="/admin/blog/edit/:postId" element={<BlogEditPost />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
