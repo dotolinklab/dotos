@@ -13,6 +13,7 @@ interface Post {
   author: string;
   created_at: string;
   category: string;
+  thumbnail_url: string | null;
 }
 
 const FeaturedPosts = () => {
@@ -93,32 +94,43 @@ const FeaturedPosts = () => {
               const PostIcon = getCategoryIcon(post.category);
               return (
                 <Card key={post.id} className="border hover:shadow-lg transition-shadow overflow-hidden group">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="p-2 rounded-full bg-purple-100 text-purple-700">
-                        <PostIcon className="h-4 w-4" />
-                      </span>
-                      <span className="text-sm text-purple-700 font-medium">{post.category}</span>
-                    </div>
-                    <Link 
-                      to={`${getCategoryUrl(post.category)}/${post.id}`} 
-                      className="block group-hover:text-purple-700 transition-colors"
-                    >
-                      <h3 className="text-xl font-bold mb-3">
-                        {post.title}
-                      </h3>
-                    </Link>
-                    <p className="text-gray-600 mb-6 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
-                          <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
-                        </div>
-                        <span>{post.author}</span>
+                  <CardContent className="p-0">
+                    {post.thumbnail_url && (
+                      <div className="aspect-[16/9] relative overflow-hidden">
+                        <img 
+                          src={post.thumbnail_url} 
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <span>{formatDate(post.created_at)}</span>
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="p-2 rounded-full bg-purple-100 text-purple-700">
+                          <PostIcon className="h-4 w-4" />
+                        </span>
+                        <span className="text-sm text-purple-700 font-medium">{post.category}</span>
+                      </div>
+                      <Link 
+                        to={`${getCategoryUrl(post.category)}/${post.id}`} 
+                        className="block group-hover:text-purple-700 transition-colors"
+                      >
+                        <h3 className="text-xl font-bold mb-3">
+                          {post.title}
+                        </h3>
+                      </Link>
+                      <p className="text-gray-600 mb-6 line-clamp-3">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
+                            <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
+                          </div>
+                          <span>{post.author}</span>
+                        </div>
+                        <span>{formatDate(post.created_at)}</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
