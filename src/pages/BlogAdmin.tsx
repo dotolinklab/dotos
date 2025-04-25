@@ -80,8 +80,8 @@ const BlogAdmin = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <AdminSidebar />
-      <main className="flex-1 ml-60">
-        <div className="container max-w-4xl mx-auto py-8 px-4">
+      <main className="flex-1 ml-60 pl-8 pr-8">
+        <div className="container max-w-4xl mx-auto py-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-bold text-purple-800">블로그 포스트 작성</h1>
             <Button
@@ -97,23 +97,24 @@ const BlogAdmin = () => {
             <Card className="md:col-span-2">
               <CardContent className="p-6">
                 <form id="post-form" onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
+                  <div className="space-y-2 w-full">
                     <Label htmlFor="title">제목</Label>
                     <Input
                       id="title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="포스트 제목을 입력하세요"
+                      className="w-full"
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 w-full">
                     <Label htmlFor="content">내용</Label>
                     <Textarea
                       id="content"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      className="min-h-[400px]"
+                      className="min-h-[400px] w-full"
                       placeholder="포스트 내용을 작성하세요 (마크다운 지원)"
                     />
                   </div>
