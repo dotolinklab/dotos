@@ -27,12 +27,12 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md border-b border-gray-100' : 'bg-transparent'}`}>
+    <nav className="fixed w-full z-50 bg-white shadow-md border-b border-gray-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <span className={`text-xl font-bold ${isScrolled ? 'text-purple-700' : 'text-white'}`}>도토링크 연구소</span>
+              <span className="text-xl font-bold text-purple-700">도토링크 연구소</span>
             </Link>
           </div>
           
@@ -42,7 +42,7 @@ const Navigation = () => {
                 key={link.name}
                 to={link.href}
                 className={`relative text-sm font-medium transition-colors duration-200 
-                  ${isScrolled ? 'text-gray-700 hover:text-purple-700' : 'text-white hover:text-purple-200'}
+                  text-purple-700 hover:text-purple-900
                   after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-purple-600 
                   after:left-0 after:bottom-[-4px] after:rounded-full
                   after:scale-x-0 after:origin-left after:transition-transform after:duration-300
@@ -57,7 +57,7 @@ const Navigation = () => {
 
           <Button 
             variant="ghost" 
-            className={`md:hidden ${isScrolled ? 'text-gray-700' : 'text-white'}`}
+            className="md:hidden text-purple-700"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <Menu className="h-6 w-6" />
@@ -74,7 +74,7 @@ const Navigation = () => {
                   className={`block px-3 py-2 rounded-md text-sm font-medium 
                     ${location.pathname === link.href 
                       ? 'text-purple-700 bg-purple-50' 
-                      : 'text-gray-700 hover:text-purple-700 hover:bg-purple-50'
+                      : 'text-purple-700 hover:text-purple-900 hover:bg-purple-50'
                     }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
