@@ -55,6 +55,12 @@ const BlogEditPost = () => {
     );
   }
 
+  // 폼 제출 핸들러
+  const onFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 기본 폼 제출 동작 방지
+    handleSubmit(e); // usePostEdit에서 가져온 handleSubmit 함수 호출
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <AdminSidebar />
@@ -74,7 +80,7 @@ const BlogEditPost = () => {
 
           <form 
             id="post-edit-form" 
-            onSubmit={handleSubmit}
+            onSubmit={onFormSubmit} // 명시적으로 onFormSubmit 핸들러 사용
           >
             <PostEditor
               title={title}
@@ -90,7 +96,7 @@ const BlogEditPost = () => {
               thumbnailPreview={thumbnailPreview}
               onThumbnailChange={setThumbnail}
               onThumbnailRemove={() => setThumbnailPreview("")}
-              onSubmit={handleSubmit} // Pass handleSubmit correctly
+              onSubmit={handleSubmit} // 여전히 PostEditor에 handleSubmit 전달
             />
           </form>
         </div>

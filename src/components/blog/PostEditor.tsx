@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -30,7 +29,7 @@ interface PostEditorProps {
   thumbnailPreview: string;
   onThumbnailChange: (file: File) => void;
   onThumbnailRemove: () => void;
-  onSubmit?: (e?: React.FormEvent) => void; // Updated to accept form event
+  onSubmit?: (e?: React.FormEvent) => void;
 }
 
 export const PostEditor = ({
@@ -47,7 +46,7 @@ export const PostEditor = ({
   thumbnailPreview,
   onThumbnailChange,
   onThumbnailRemove,
-  onSubmit, // Add to destructured props
+  onSubmit,
 }: PostEditorProps) => {
   const [editorMode, setEditorMode] = useState<"normal" | "html">("normal");
   const [showPreview, setShowPreview] = useState(false);
@@ -95,7 +94,6 @@ export const PostEditor = ({
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Left Sidebar */}
       <div className="space-y-6">
-        {/* Remove the duplicate category card */}
         <PostSettings
           category={category}
           onCategoryChange={onCategoryChange}

@@ -64,6 +64,7 @@ export const EditToolbar = ({
           </div>
         )}
         <Button
+          type="button" // 명시적으로 button 타입으로 지정하여 폼 제출 방지
           variant="outline"
           onClick={() => setShowPreview(!showPreview)}
           className="flex items-center gap-2"
