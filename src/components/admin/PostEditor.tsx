@@ -42,14 +42,24 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
         </TabsList>
         
         <TabsContent value="write">
-          <Textarea
-            id="content"
-            value={content}
-            onChange={onContentChange}
-            placeholder="마크다운과 HTML을 지원합니다. 이미지는 상단의 이미지 추가 버튼을 이용해주세요."
-            className="min-h-[400px] font-mono text-sm"
-            required
-          />
+          <div className="space-y-2">
+            <div className="bg-muted p-2 rounded-md text-sm mb-2">
+              <p>✨ HTML과 마크다운을 지원합니다:</p>
+              <ul className="list-disc pl-4 text-xs space-y-1">
+                <li>마크다운: **굵게**, *기울임*, # 제목</li>
+                <li>HTML: &lt;strong&gt;, &lt;em&gt;, &lt;h1&gt;</li>
+                <li>이미지는 상단의 이미지 추가 버튼을 이용해주세요</li>
+              </ul>
+            </div>
+            <Textarea
+              id="content"
+              value={content}
+              onChange={onContentChange}
+              placeholder="마크다운과 HTML을 지원합니다. 이미지는 상단의 이미지 추가 버튼을 이용해주세요."
+              className="min-h-[400px] font-mono text-sm"
+              required
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="preview">
@@ -63,3 +73,4 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
 };
 
 export default PostEditor;
+

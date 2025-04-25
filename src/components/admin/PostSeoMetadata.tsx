@@ -38,6 +38,14 @@ const PostSeoMetadata = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="meta-description">검색 결과에 표시될 설명</Label>
+        <div className="bg-muted p-2 rounded-md text-sm mb-2">
+          <p>👀 검색엔진 최적화를 위한 설명을 작성하세요:</p>
+          <ul className="list-disc pl-4 text-xs space-y-1">
+            <li>네이버, 구글, 다음 등의 검색 결과에 표시됩니다</li>
+            <li>포스트의 핵심 내용을 간단히 설명해주세요</li>
+            <li>150자 이내로 작성해주세요</li>
+          </ul>
+        </div>
         <Input
           id="meta-description"
           value={metaDescription}
@@ -49,6 +57,14 @@ const PostSeoMetadata = ({
 
       <div className="space-y-2">
         <Label htmlFor="keywords">태그/키워드</Label>
+        <div className="bg-muted p-2 rounded-md text-sm mb-2">
+          <p>🔍 검색을 위한 태그/키워드를 입력하세요:</p>
+          <ul className="list-disc pl-4 text-xs space-y-1">
+            <li>검색엔진이 포스트를 더 잘 이해하는데 도움이 됩니다</li>
+            <li>연관 키워드를 추가해주세요</li>
+            <li>Enter를 눌러 키워드를 추가할 수 있습니다</li>
+          </ul>
+        </div>
         <Input
           id="keywords"
           value={newKeyword}
@@ -75,3 +91,4 @@ const PostSeoMetadata = ({
 };
 
 export default PostSeoMetadata;
+
