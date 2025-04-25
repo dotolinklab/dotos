@@ -1,63 +1,21 @@
 
 import { useState } from 'react';
 import Navigation from '@/components/Navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Pencil, LayoutDashboard, FileText, Settings } from 'lucide-react';
-import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { LayoutDashboard, FileText, Pencil, Settings } from 'lucide-react';
+import AdminDashboard from '@/components/admin/AdminDashboard';
+import PostManagement from '@/components/admin/PostManagement';
+import WritePost from '@/components/admin/WritePost';
+import BlogSettings from '@/components/admin/BlogSettings';
 
 const BlogAdmin = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
   const [categories, setCategories] = useState(['AI 소식', '부업하기', '렌탈솔루션', '배움터']);
-  const [newCategory, setNewCategory] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-
-  // Sample posts data for the management tab
   const [posts] = useState([
     { id: 1, title: 'ChatGPT-5 출시', category: 'AI 소식', date: '2025-04-21', status: '게시됨' },
     { id: 2, title: '2025년 가장 수익성 높은 온라인 부업 TOP 5', category: '부업하기', date: '2025-04-18', status: '게시됨' },
     { id: 3, title: '비개발자를 위한 AI 활용법: 기초 가이드', category: '배움터', date: '2025-04-15', status: '게시됨' },
     { id: 4, title: '임시 저장된 글', category: '렌탈솔루션', date: '2025-04-22', status: '임시저장' },
   ]);
-
-  const handleAddCategory = () => {
-    if (!newCategory.trim()) {
-      toast.error('카테고리 이름을 입력해주세요.');
-      return;
-    }
-    if (categories.includes(newCategory)) {
-      toast.error('이미 존재하는 카테고리입니다.');
-      return;
-    }
-    setCategories([...categories, newCategory]);
-    setNewCategory('');
-    toast.success('새로운 카테고리가 추가되었습니다.');
-  };
-
-  const handleDeleteCategory = (categoryToDelete: string) => {
-    if (posts.some(post => post.category === categoryToDelete)) {
-      toast.error('해당 카테고리에 포스트가 존재하여 삭제할 수 없습니다.');
-      return;
-    }
-    setCategories(categories.filter(category => category !== categoryToDelete));
-    if (selectedCategory === categoryToDelete) {
-      setSelectedCategory(categories[0]);
-    }
-    toast.success('카테고리가 삭제되었습니다.');
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success('블로그 포스트가 저장되었습니다.');
-    setTitle('');
-    setContent('');
-    setSelectedCategory(categories[0]);
-  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -95,209 +53,25 @@ const BlogAdmin = () => {
                 설정
               </TabsTrigger>
             </TabsList>
-            
-            {/* Dashboard Content */}
-            <TabsContent value="dashboard" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-lg shadow-sm p-6 border border-purple-100">
-                  <h3 className="text-xl font-bold mb-2 text-purple-700">총 게시물</h3>
-                  <p className="text-3xl font-bold">12</p>
-                  <p className="text-sm text-gray-500 mt-1">지난주 대비 +3</p>
-                </div>
-                <div className="bg-white rounded-lg shadow-sm p-6 border border-purple-100">
-                  <h3 className="text-xl font-bold mb-2 text-purple-700">총 조회수</h3>
-                  <p className="text-3xl font-bold">1,245</p>
-                  <p className="text-sm text-gray-500 mt-1">지난주 대비 +122</p>
-                </div>
-                <div className="bg-white rounded-lg shadow-sm p-6 border border-purple-100">
-                  <h3 className="text-xl font-bold mb-2 text-purple-700">인기 카테고리</h3>
-                  <p className="text-3xl font-bold">AI 소식</p>
-                  <p className="text-sm text-gray-500 mt-1">전체 조회수의 45%</p>
-                </div>
-              </div>
 
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-purple-100">
-                <h3 className="text-xl font-bold mb-4 text-purple-700">카테고리별 게시물</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {categories.map((cat) => (
-                    <div key={cat} className="p-4 border rounded-lg text-center">
-                      <p className="font-semibold text-purple-700">{cat}</p>
-                      <p className="text-2xl font-bold mt-2">
-                        {posts.filter(post => post.category === cat).length}
-                      </p>
-                      <p className="text-sm text-gray-500">게시물</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <TabsContent value="dashboard">
+              <AdminDashboard posts={posts} categories={categories} />
             </TabsContent>
-            
-            {/* Posts Management Content */}
-            <TabsContent value="posts" className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-purple-100">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-bold text-purple-700">게시물 관리</h3>
-                  <Button className="bg-purple-700 hover:bg-purple-800">
-                    새 글 작성
-                  </Button>
-                </div>
-                
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>제목</TableHead>
-                        <TableHead>카테고리</TableHead>
-                        <TableHead>작성일</TableHead>
-                        <TableHead>상태</TableHead>
-                        <TableHead>관리</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {samplePosts.map((post) => (
-                        <TableRow key={post.id}>
-                          <TableCell className="font-medium">{post.title}</TableCell>
-                          <TableCell>{post.category}</TableCell>
-                          <TableCell>{post.date}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-1 rounded-full text-xs ${
-                              post.status === '게시됨' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {post.status}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm">수정</Button>
-                              <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">삭제</Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
+
+            <TabsContent value="posts">
+              <PostManagement posts={posts} categories={categories} />
             </TabsContent>
-            
-            {/* Write Content */}
-            <TabsContent value="write" className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm p-8 border border-purple-100">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">제목</Label>
-                    <Input
-                      id="title"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="블로그 포스트 제목을 입력하세요"
-                      className="text-lg"
-                    />
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="category">카테고리</Label>
-                    <select
-                      id="category"
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="content">내용</Label>
-                    <Textarea
-                      id="content"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="블로그 내용을 입력하세요"
-                      className="min-h-[400px] text-base"
-                    />
-                  </div>
-
-                  <div className="flex justify-end gap-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setTitle('');
-                        setContent('');
-                        setCategory('AI 소식');
-                      }}
-                    >
-                      초기화
-                    </Button>
-                    <Button type="submit" className="bg-purple-700 hover:bg-purple-800">
-                      포스트 저장하기
-                    </Button>
-                  </div>
-                </form>
-              </div>
+            <TabsContent value="write">
+              <WritePost categories={categories} />
             </TabsContent>
-            
-            {/* Settings Content */}
-            <TabsContent value="settings" className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm p-8 border border-purple-100">
-                <h3 className="text-xl font-bold mb-6 text-purple-700">블로그 설정</h3>
-                
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="blogName">블로그 이름</Label>
-                    <Input id="blogName" defaultValue="AI 블로그" placeholder="블로그 이름을 입력하세요" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="blogDescription">블로그 설명</Label>
-                    <Textarea 
-                      id="blogDescription" 
-                      defaultValue="AI 관련 최신 소식과 정보를 제공하는 블로그입니다." 
-                      placeholder="블로그 설명을 입력하세요" 
-                    />
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-lg font-semibold mt-8 mb-4 text-purple-700">카테고리 관리</h4>
-                    
-                    {categories.map((category, index) => (
-                      <div key={index} className="flex items-center gap-4">
-                        <Input value={category} disabled />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteCategory(category)}
-                          className="text-red-500 hover:text-red-600"
-                          disabled={posts.some(post => post.category === category)}
-                        >
-                          삭제
-                        </Button>
-                      </div>
-                    ))}
-                    
-                    <div className="flex items-center gap-4 mt-4">
-                      <Input
-                        placeholder="새 카테고리 이름"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleAddCategory}
-                      >
-                        추가
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+            <TabsContent value="settings">
+              <BlogSettings 
+                categories={categories} 
+                setCategories={setCategories}
+                posts={posts}
+              />
             </TabsContent>
           </Tabs>
         </div>
