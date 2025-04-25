@@ -18,9 +18,10 @@ const AdminSidebar = () => {
                 : "text-gray-600 hover:bg-gray-100"
             }`
           }
+          end
         >
           <LayoutDashboard size={20} />
-          대시보드
+          새 포스트 작성
         </NavLink>
         <NavLink
           to="/admin/blog/posts"
