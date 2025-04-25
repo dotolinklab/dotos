@@ -1,3 +1,4 @@
+
 import AdminSidebar from "@/components/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
@@ -89,7 +90,7 @@ const BlogEditPost = () => {
               thumbnailPreview={thumbnailPreview}
               onThumbnailChange={setThumbnail}
               onThumbnailRemove={() => setThumbnailPreview("")}
-              onSubmit={handleSubmit} // Optional submit handler
+              onSubmit={handleSubmit} // Pass handleSubmit correctly
             />
           </form>
         </div>

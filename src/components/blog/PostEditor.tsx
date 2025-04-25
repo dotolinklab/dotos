@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -29,7 +30,7 @@ interface PostEditorProps {
   thumbnailPreview: string;
   onThumbnailChange: (file: File) => void;
   onThumbnailRemove: () => void;
-  onSubmit?: () => void; // Add optional submit handler
+  onSubmit?: (e?: React.FormEvent) => void; // Updated to accept form event
 }
 
 export const PostEditor = ({
