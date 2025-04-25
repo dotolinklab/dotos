@@ -17,14 +17,16 @@ import { toast } from "sonner";
 import { Upload, Trash2, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
+import { useNavigate } from "react-router-dom";
 
 const BlogAdmin = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const navigate = useNavigate();
   
   const { uploadFile } = useSupabaseStorage('blog-images');
 
@@ -51,7 +53,7 @@ const BlogAdmin = () => {
   const renderHtmlPreview = () => {
     return (
       <div 
-        className="prose max-w-none"
+        className="prose prose-purple max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}
       />
     );
@@ -124,6 +126,7 @@ const BlogAdmin = () => {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="포스트 제목을 입력하세요"
+                      className="text-lg font-medium"
                     />
                   </div>
 
@@ -138,7 +141,7 @@ const BlogAdmin = () => {
                         id="content"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        className="min-h-[400px] font-mono"
+                        className="min-h-[400px] font-mono text-base leading-relaxed resize-y"
                         placeholder="포스트 내용을 작성하세요 (HTML 태그 사용 가능)"
                       />
                     </div>

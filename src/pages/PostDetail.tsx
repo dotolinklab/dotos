@@ -75,7 +75,7 @@ const PostDetail = () => {
 
   const renderContent = (content: string) => {
     if (content.includes('<') && content.includes('>')) {
-      return <div className="post-content" dangerouslySetInnerHTML={{ __html: content }} />;
+      return <div className="post-content prose prose-purple max-w-none" dangerouslySetInnerHTML={{ __html: content }} />;
     } else {
       return <ReactMarkdown>{content}</ReactMarkdown>;
     }
