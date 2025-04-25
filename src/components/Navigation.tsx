@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,7 +34,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-bold text-purple-700">도토링크 연구소</span>
+              <span className="text-2xl font-bold text-purple-700">도토링크 연구소</span>
             </Link>
           </div>
           
@@ -44,13 +43,13 @@ const Navigation = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`relative text-sm font-medium transition-colors duration-200 
+                className={`relative text-base font-medium transition-colors duration-200 
                   text-purple-700 hover:text-purple-900
-                  after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-purple-600 
+                  after:content-[''] after:absolute after:w-full after:h-1 after:bg-purple-600 
                   after:left-0 after:bottom-[-4px] after:rounded-full
                   after:scale-x-0 after:origin-left after:transition-transform after:duration-300
                   hover:after:scale-x-100
-                  ${location.pathname === link.href ? 'after:scale-x-100' : ''}
+                  ${location.pathname === link.href ? 'after:scale-x-100 after:h-1.5' : ''}
                 `}
               >
                 {link.name}
