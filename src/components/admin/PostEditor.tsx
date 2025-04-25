@@ -63,10 +63,31 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
           </div>
         </TabsContent>
         
-        <TabsContent value="preview">
-          <div className="border rounded-md p-4 min-h-[400px] overflow-y-auto prose prose-purple max-w-none bg-white">
-            <div dangerouslySetInnerHTML={{ __html: content }} />
+        <TabsContent value="preview" className="relative">
+          <div className="absolute right-0 top-0 z-10 flex gap-2 p-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="bg-white"
+              onClick={() => document.getElementById('content-image')?.click()}
+            >
+              <Image className="mr-2 h-4 w-4" />
+              이미지 추가
+            </Button>
           </div>
+          <div 
+            className="border rounded-md p-4 min-h-[400px] overflow-y-auto prose prose-purple max-w-none bg-white"
+            contentEditable
+            onInput={(e) => {
+              const newContent = e.currentTarget.innerHTML;
+              const event = {
+                target: { value: newContent }
+              } as React.ChangeEvent<HTMLTextAreaElement>;
+              onContentChange(event);
+            }}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </TabsContent>
       </Tabs>
     </div>
