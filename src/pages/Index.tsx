@@ -1,4 +1,5 @@
 
+import React from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -63,11 +64,11 @@ const Index = () => {
               asChild 
               variant="outline" 
               size="lg" 
-              className="border-white/50 text-white hover:bg-white/10 hover:text-white"
+              className="border-white/50 text-purple-700 hover:bg-white/10 hover:text-purple-600"
             >
               <Link to="/learning" className="flex items-center">
                 학습 가이드 보기
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 text-purple-700" />
               </Link>
             </Button>
           </div>
@@ -170,4 +171,3 @@ const Index = () => {
 };
 
 export default Index;
-
