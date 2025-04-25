@@ -14,13 +14,45 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Image } from "lucide-react";
+import { Image, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const BlogAdmin = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    const file = e.target.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    
+    setUploading(true);
+    
+    try {
+      const { data, error } = await supabase.storage
+        .from('blog-images')
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(fileName);
+
+      setImageUrl(publicUrl);
+      toast.success("이미지가 업로드되었습니다!");
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error("이미지 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +67,8 @@ const BlogAdmin = () => {
         content,
         category,
         author: '관리자',
-        excerpt: content.substring(0, 150) + '...'
+        excerpt: content.substring(0, 150) + '...',
+        thumbnail_url: imageUrl
       });
 
       if (error) throw error;
@@ -44,6 +77,7 @@ const BlogAdmin = () => {
       setTitle("");
       setContent("");
       setCategory("");
+      setImageUrl(null);
     } catch (error) {
       console.error('Error inserting post:', error);
       toast.error("포스트 저장에 실패했습니다.");
@@ -114,15 +148,39 @@ const BlogAdmin = () => {
                 <div className="space-y-2">
                   <Label>대표 이미지</Label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <Image className="text-gray-400" size={32} />
-                      <p className="text-sm text-gray-500">
-                        이미지를 업로드하세요
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        PNG, JPG, GIF (최대 5MB)
-                      </p>
-                    </div>
+                    {imageUrl ? (
+                      <div className="space-y-4">
+                        <img 
+                          src={imageUrl} 
+                          alt="업로드된 이미지"
+                          className="mx-auto max-h-40 rounded"
+                        />
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setImageUrl(null)}
+                          className="w-full"
+                        >
+                          이미지 제거
+                        </Button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer flex flex-col items-center gap-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          disabled={uploading}
+                        />
+                        <Upload className="text-gray-400" size={32} />
+                        <p className="text-sm text-gray-500">
+                          {uploading ? "업로드 중..." : "이미지를 업로드하세요"}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          PNG, JPG, GIF (최대 5MB)
+                        </p>
+                      </label>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -135,4 +193,3 @@ const BlogAdmin = () => {
 };
 
 export default BlogAdmin;
-
