@@ -9,12 +9,13 @@ interface EditorToolbarProps {
 
 const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
   return (
-    <div className="flex items-center gap-4 mb-2 sticky top-0 bg-white z-10 py-2">
+    <div className="flex items-center justify-between mb-2 sticky top-0 bg-white z-10 py-2">
+      <div /> {/* Empty div for flex justify-between spacing */}
       <Button
         type="button"
         variant="outline"
         onClick={(e) => {
-          e.preventDefault(); // Prevent losing focus
+          e.preventDefault();
           onImageUpload();
         }}
       >
