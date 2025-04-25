@@ -1,10 +1,11 @@
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+    <section className="relative h-screen flex items-center px-4 overflow-hidden">
       {/* Video Background */}
       <video
         autoPlay
@@ -16,10 +17,10 @@ const Hero = () => {
         <source src="https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/video//heroback.mp4" type="video/mp4" />
       </video>
       
-      {/* Black Overlay with Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60 z-[-1]"></div>
+      {/* Black Overlay */}
+      <div className="absolute inset-0 bg-black/70 z-[-1]"></div>
 
-      <div className="max-w-6xl mx-auto text-center z-10">
+      <div className="max-w-6xl mx-auto text-center z-10 py-20">
         <div className="inline-block bg-white/20 text-white px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
           최신 AI 트렌드를 한눈에
         </div>
@@ -34,7 +35,7 @@ const Hero = () => {
           <Button asChild size="lg" className="bg-white text-brand-purple hover:bg-purple-50 font-medium">
             <Link to="/ai-news">최신 AI 소식 보기</Link>
           </Button>
-          <Button asChild variant="ghost" size="lg" className="bg-white/10 hover:bg-white/20 text-white border-white">
+          <Button asChild variant="ghost" size="lg" className="bg-white/10 hover:bg-white/20 text-white">
             <Link to="/learning" className="flex items-center">
               학습 가이드 보기
               <ArrowRight className="ml-2 h-4 w-4" />
