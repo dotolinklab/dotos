@@ -6,6 +6,7 @@ import ThumbnailUpload from './ThumbnailUpload';
 import PostStatusSelect from './PostStatusSelect';
 import PostCategorySelect from './PostCategorySelect';
 import PostFormControls from './PostFormControls';
+import PostSeoMetadata from './PostSeoMetadata';
 import { usePostEdit } from '@/hooks/usePostEdit';
 import { useSupabaseStorage } from '@/hooks/useSupabaseStorage';
 import { toast } from "sonner";
@@ -32,6 +33,10 @@ const EditPost = ({ categories }: EditPostProps) => {
     setThumbnail,
     thumbnailPreview,
     setThumbnailPreview,
+    metaDescription,
+    setMetaDescription,
+    keywords,
+    setKeywords,
     isSubmitting,
     handleSubmit
   } = usePostEdit({ postId: postId || '' });
@@ -98,6 +103,13 @@ const EditPost = ({ categories }: EditPostProps) => {
           content={content}
           onContentChange={(e) => setContent(e.target.value)}
           onImageUpload={handleContentImageUpload}
+        />
+
+        <PostSeoMetadata
+          metaDescription={metaDescription}
+          onMetaDescriptionChange={setMetaDescription}
+          keywords={keywords}
+          onKeywordsChange={setKeywords}
         />
 
         <PostFormControls isSubmitting={isSubmitting} />

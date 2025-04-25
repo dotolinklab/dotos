@@ -10,14 +10,6 @@ interface UsePostEditProps {
   onSuccess?: () => void;
 }
 
-interface PostData {
-  title: string;
-  content: string;
-  category: string;
-  thumbnail_url: string | null;
-  status: string;
-}
-
 export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -27,11 +19,12 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [existingThumbnailUrl, setExistingThumbnailUrl] = useState<string | null>(null);
   const [status, setStatus] = useState('published');
+  const [metaDescription, setMetaDescription] = useState('');
+  const [keywords, setKeywords] = useState<string[]>([]);
 
   const { uploadFile: uploadToImages } = useSupabaseStorage('images');
   const navigate = useNavigate();
 
-  // Load post data
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -48,6 +41,8 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
           setContent(data.content);
           setSelectedCategory(data.category);
           setStatus(data.status);
+          setMetaDescription(data.meta_description || '');
+          setKeywords(data.meta_keywords || []);
           if (data.thumbnail_url) {
             setExistingThumbnailUrl(data.thumbnail_url);
             setThumbnailPreview(data.thumbnail_url);
@@ -83,7 +78,9 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
           category: selectedCategory,
           excerpt,
           status,
-          thumbnail_url: thumbnailUrl
+          thumbnail_url: thumbnailUrl,
+          meta_description: metaDescription || null,
+          meta_keywords: keywords
         })
         .eq('id', postId);
 
@@ -114,6 +111,10 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
     thumbnailPreview,
     setThumbnailPreview,
     existingThumbnailUrl,
+    metaDescription,
+    setMetaDescription,
+    keywords,
+    setKeywords,
     isSubmitting,
     handleSubmit
   };

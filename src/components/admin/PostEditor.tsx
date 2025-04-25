@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Image } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface PostEditorProps {
   content: string;
@@ -33,27 +34,30 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
           onChange={onImageUpload}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="content-editor" className="text-sm text-muted-foreground mb-2">편집</Label>
+      
+      <Tabs defaultValue="write" className="w-full">
+        <TabsList className="mb-2">
+          <TabsTrigger value="write">작성</TabsTrigger>
+          <TabsTrigger value="preview">미리보기</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="write">
           <Textarea
             id="content"
             value={content}
             onChange={onContentChange}
-            placeholder="블로그 내용을 입력하세요"
-            className="min-h-[400px] text-base"
+            placeholder="마크다운과 HTML을 지원합니다. 이미지는 상단의 이미지 추가 버튼을 이용해주세요."
+            className="min-h-[400px] font-mono text-sm"
             required
           />
-        </div>
-        <div>
-          <Label htmlFor="content-preview" className="text-sm text-muted-foreground mb-2">미리보기</Label>
-          <div 
-            className="border rounded-md p-4 min-h-[400px] overflow-y-auto bg-white"
-          >
+        </TabsContent>
+        
+        <TabsContent value="preview">
+          <div className="border rounded-md p-4 min-h-[400px] overflow-y-auto prose prose-purple max-w-none bg-white">
             <ReactMarkdown>{content}</ReactMarkdown>
           </div>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

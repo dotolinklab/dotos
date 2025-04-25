@@ -17,6 +17,8 @@ export type Database = {
           created_at: string
           excerpt: string | null
           id: string
+          meta_description: string | null
+          meta_keywords: string[] | null
           status: string
           thumbnail_url: string | null
           title: string
@@ -29,6 +31,8 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
+          meta_description?: string | null
+          meta_keywords?: string[] | null
           status?: string
           thumbnail_url?: string | null
           title: string
@@ -41,6 +45,8 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
+          meta_description?: string | null
+          meta_keywords?: string[] | null
           status?: string
           thumbnail_url?: string | null
           title?: string
