@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,8 +21,7 @@ const Navigation = () => {
     { name: "AI 소식", href: "/ai-news" },
     { name: "부업하기", href: "/side-hustles" },
     { name: "렌탈솔루션", href: "/rental" },
-    { name: "배움터", href: "/learning" },
-    { name: "Contact", href: "/contact" }
+    { name: "배움터", href: "/learning" }
   ];
 
   return (

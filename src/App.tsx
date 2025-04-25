@@ -7,7 +7,6 @@ import AiNews from "./pages/AiNews";
 import SideHustles from "./pages/SideHustles";
 import RentalSolution from "./pages/RentalSolution";
 import Learning from "./pages/Learning";
-import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import BlogAdmin from "./pages/BlogAdmin";
 import PostDetail from "./pages/PostDetail";
@@ -33,7 +32,6 @@ const App = () => (
           <Route path="/rental/:postId" element={<PostDetail />} />
           <Route path="/learning" element={<Learning />} />
           <Route path="/learning/:postId" element={<PostDetail />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
           <Route path="/admin/blog/edit/:postId" element={<EditBlogPost />} />
           <Route path="*" element={<NotFound />} />
