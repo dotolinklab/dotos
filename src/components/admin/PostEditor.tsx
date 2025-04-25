@@ -1,10 +1,9 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Image } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface PostEditorProps {
@@ -14,6 +13,46 @@ interface PostEditorProps {
 }
 
 const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps) => {
+  const editorRef = useRef<HTMLDivElement>(null);
+  
+  // Function to handle image upload from the preview
+  const handleImageUploadFromPreview = () => {
+    // Save the current selection position
+    const selection = window.getSelection();
+    const range = selection?.getRangeAt(0);
+    
+    // Create an invisible input element for file selection
+    const fileInput = document.getElementById('content-image') as HTMLInputElement;
+    
+    // Add listener to handle the file selection
+    const originalOnChange = fileInput.onchange;
+    
+    fileInput.onchange = async (e) => {
+      // Call the original onImageUpload handler
+      if (originalOnChange && e) {
+        originalOnChange.call(fileInput, e);
+      }
+      
+      // Wait a bit for the image URL to be processed
+      setTimeout(() => {
+        if (editorRef.current && range) {
+          // Restore the selection
+          const newSelection = window.getSelection();
+          if (newSelection) {
+            newSelection.removeAllRanges();
+            newSelection.addRange(range);
+          }
+        }
+      }, 100);
+      
+      // Reset the onchange to the original handler
+      fileInput.onchange = originalOnChange as any;
+    };
+    
+    // Trigger the file input click
+    fileInput.click();
+  };
+
   return (
     <div className="space-y-2">
       <Label htmlFor="content">내용</Label>
@@ -64,21 +103,23 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
         </TabsContent>
         
         <TabsContent value="preview" className="relative">
-          <div className="absolute right-0 top-0 z-10 flex gap-2 p-2">
+          <div className="sticky top-0 z-10 flex justify-end p-2 bg-white/80 backdrop-blur-sm border-b">
             <Button
               type="button"
               variant="outline"
               size="sm"
               className="bg-white"
-              onClick={() => document.getElementById('content-image')?.click()}
+              onClick={handleImageUploadFromPreview}
             >
               <Image className="mr-2 h-4 w-4" />
               이미지 추가
             </Button>
           </div>
           <div 
+            ref={editorRef}
             className="border rounded-md p-4 min-h-[400px] overflow-y-auto prose prose-purple max-w-none bg-white"
             contentEditable
+            suppressContentEditableWarning
             onInput={(e) => {
               const newContent = e.currentTarget.innerHTML;
               const event = {
