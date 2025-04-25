@@ -25,6 +25,19 @@ const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps
   const handleImageUpload = (file: File) => {
     onImageUpload(file, cursorPosition);
   };
+  
+  // Handle inserting markdown at cursor position
+  const handleInsertMarkdown = (markdown: string) => {
+    if (cursorPosition !== null) {
+      const before = content.substring(0, cursorPosition);
+      const after = content.substring(cursorPosition);
+      const newContent = before + markdown + after;
+      onContentChange(newContent);
+    } else {
+      // If no cursor position, append to the end
+      onContentChange(content + markdown);
+    }
+  };
 
   return (
     <Tabs 
@@ -41,6 +54,7 @@ const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps
 
       <EditorToolbar 
         onImageUpload={handleImageUpload}
+        onInsertMarkdown={handleInsertMarkdown}
       />
       
       <TabsContent value="normal">
