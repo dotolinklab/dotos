@@ -1,5 +1,5 @@
-
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -65,7 +65,7 @@ const Index = () => {
                       <img src="/avatar.png" alt="Author" className="w-6 h-6 rounded-full" />
                       <span>알파GOGOGO</span>
                     </div>
-                    <span>2025년 4월 23일</span>
+                    <span>2025�� 4월 23일</span>
                   </div>
                 </div>
               </Card>
@@ -73,6 +73,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };
