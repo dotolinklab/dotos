@@ -48,6 +48,7 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
               <ul className="list-disc pl-4 text-xs space-y-1">
                 <li>마크다운: **굵게**, *기울임*, # 제목</li>
                 <li>HTML: &lt;strong&gt;, &lt;em&gt;, &lt;h1&gt;</li>
+                <li>복잡한 HTML은 미리보기에서 확인해주세요</li>
                 <li>이미지는 상단의 이미지 추가 버튼을 이용해주세요</li>
               </ul>
             </div>
@@ -64,7 +65,7 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
         
         <TabsContent value="preview">
           <div className="border rounded-md p-4 min-h-[400px] overflow-y-auto prose prose-purple max-w-none bg-white">
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <div dangerouslySetInnerHTML={{ __html: content }} />
           </div>
         </TabsContent>
       </Tabs>
@@ -73,4 +74,3 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
 };
 
 export default PostEditor;
-

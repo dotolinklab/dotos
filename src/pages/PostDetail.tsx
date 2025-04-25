@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
@@ -74,6 +73,14 @@ const PostDetail = () => {
     }
   };
 
+  const renderContent = (content: string) => {
+    if (content.includes('<') && content.includes('>')) {
+      return <div className="post-content" dangerouslySetInnerHTML={{ __html: content }} />;
+    } else {
+      return <ReactMarkdown>{content}</ReactMarkdown>;
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -123,7 +130,7 @@ const PostDetail = () => {
               )}
               
               <div className="prose prose-purple max-w-none">
-                <ReactMarkdown>{post.content}</ReactMarkdown>
+                {renderContent(post.content)}
               </div>
             </>
           ) : (
