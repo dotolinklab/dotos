@@ -1,4 +1,3 @@
-
 import AdminSidebar from "@/components/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -6,7 +5,6 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { PostEditor } from "@/components/blog/PostEditor";
-import { PostSettings } from "@/components/blog/PostSettings";
 
 const BlogAdmin = () => {
   const [title, setTitle] = useState("");
@@ -89,29 +87,21 @@ const BlogAdmin = () => {
           </div>
 
           <form id="post-form" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2">
-                <PostEditor
-                  title={title}
-                  content={content}
-                  onTitleChange={setTitle}
-                  onContentChange={setContent}
-                  metaDescription={metaDescription}
-                  onMetaDescriptionChange={setMetaDescription}
-                  tags={tags}
-                  onTagsChange={setTags}
-                />
-              </div>
-              <div>
-                <PostSettings
-                  category={category}
-                  onCategoryChange={setCategory}
-                  thumbnailPreview={imageUrl || ""}
-                  onThumbnailChange={handleImageUpload}
-                  onThumbnailRemove={() => setImageUrl(null)}
-                />
-              </div>
-            </div>
+            <PostEditor
+              title={title}
+              content={content}
+              onTitleChange={setTitle}
+              onContentChange={setContent}
+              metaDescription={metaDescription}
+              onMetaDescriptionChange={setMetaDescription}
+              tags={tags}
+              onTagsChange={setTags}
+              category={category}
+              onCategoryChange={setCategory}
+              thumbnailPreview={imageUrl || ""}
+              onThumbnailChange={handleImageUpload}
+              onThumbnailRemove={() => setImageUrl(null)}
+            />
           </form>
         </div>
       </main>

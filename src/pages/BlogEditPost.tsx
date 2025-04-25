@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { usePostEdit } from "@/hooks/usePostEdit";
 import { PostEditor } from "@/components/blog/PostEditor";
-import { PostSettings } from "@/components/blog/PostSettings";
 
 const BlogEditPost = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -74,29 +73,21 @@ const BlogEditPost = () => {
           </div>
 
           <form id="post-edit-form" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2">
-                <PostEditor
-                  title={title}
-                  content={content}
-                  onTitleChange={setTitle}
-                  onContentChange={setContent}
-                  metaDescription={metaDescription || ""}
-                  onMetaDescriptionChange={setMetaDescription}
-                  tags={keywordsString}
-                  onTagsChange={handleKeywordsChange}
-                />
-              </div>
-              <div>
-                <PostSettings
-                  category={selectedCategory}
-                  onCategoryChange={setSelectedCategory}
-                  thumbnailPreview={thumbnailPreview}
-                  onThumbnailChange={setThumbnail}
-                  onThumbnailRemove={() => setThumbnailPreview("")}
-                />
-              </div>
-            </div>
+            <PostEditor
+              title={title}
+              content={content}
+              onTitleChange={setTitle}
+              onContentChange={setContent}
+              metaDescription={metaDescription}
+              onMetaDescriptionChange={setMetaDescription}
+              tags={keywordsString}
+              onTagsChange={handleKeywordsChange}
+              category={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              thumbnailPreview={thumbnailPreview}
+              onThumbnailChange={setThumbnail}
+              onThumbnailRemove={() => setThumbnailPreview("")}
+            />
           </form>
         </div>
       </main>

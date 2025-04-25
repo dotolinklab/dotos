@@ -1,12 +1,13 @@
 
 import { useState } from "react";
-import { Eye, FileText, Code } from "lucide-react";
+import { Eye, FileText, Code, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PostEditorProps {
   title: string;
@@ -17,6 +18,11 @@ interface PostEditorProps {
   onMetaDescriptionChange?: (value: string) => void;
   tags?: string;
   onTagsChange?: (value: string) => void;
+  category: string;
+  onCategoryChange: (value: string) => void;
+  thumbnailPreview: string;
+  onThumbnailChange: (file: File) => void;
+  onThumbnailRemove: () => void;
 }
 
 export const PostEditor = ({
@@ -28,9 +34,27 @@ export const PostEditor = ({
   onMetaDescriptionChange = () => {},
   tags = "",
   onTagsChange = () => {},
+  category,
+  onCategoryChange,
+  thumbnailPreview,
+  onThumbnailChange,
+  onThumbnailRemove
 }: PostEditorProps) => {
-  const [showPreview, setShowPreview] = useState(false);
   const [editorMode, setEditorMode] = useState<"normal" | "html">("normal");
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handleContentChange = (value: string) => {
+    if (editorMode === "html") {
+      onContentChange(value);
+    } else {
+      // Convert plain text to HTML when in normal mode
+      const htmlContent = value
+        .split('\n')
+        .map(line => `<p>${line}</p>`)
+        .join('');
+      onContentChange(htmlContent);
+    }
+  };
 
   const renderHtmlPreview = () => {
     return (
@@ -42,88 +66,66 @@ export const PostEditor = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* 제목 영역 */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2">
-              <Label htmlFor="title">제목</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => onTitleChange(e.target.value)}
-                placeholder="포스트 제목을 입력하세요"
-                className="mt-2 text-lg font-medium"
-              />
-            </div>
-            <div>
-              <Label htmlFor="category">카테고리</Label>
-              <div className="h-10 mt-2">
-                {/* 카테고리는 PostSettings에서 관리하므로 여기서는 placeholder만 표시 */}
-                <div className="h-full border rounded-md bg-muted/30 flex items-center px-3">
-                  카테고리 선택
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Left Sidebar */}
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <Label>카테고리</Label>
+            <Select value={category} onValueChange={onCategoryChange}>
+              <SelectTrigger className="w-full mt-2">
+                <SelectValue placeholder="카테고리 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="AI 소식">AI 소식</SelectItem>
+                <SelectItem value="부업하기">부업하기</SelectItem>
+                <SelectItem value="렌탈솔루션">렌탈솔루션</SelectItem>
+                <SelectItem value="배움터">배움터</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <Label>대표 이미지</Label>
+            <div className="mt-2 border-2 border-dashed rounded-lg p-4">
+              {thumbnailPreview ? (
+                <div className="space-y-4">
+                  <img 
+                    src={thumbnailPreview} 
+                    alt="업로드된 이미지"
+                    className="w-full aspect-video object-cover rounded"
+                  />
+                  <Button 
+                    variant="outline" 
+                    onClick={onThumbnailRemove}
+                    className="w-full"
+                  >
+                    이미지 제거
+                  </Button>
                 </div>
-              </div>
+              ) : (
+                <label className="cursor-pointer flex flex-col items-center gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        onThumbnailChange(e.target.files[0]);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  <Upload className="text-gray-400" size={32} />
+                  <p className="text-sm text-gray-500">이미지를 업로드하세요</p>
+                  <p className="text-xs text-gray-400">PNG, JPG, GIF (최대 5MB)</p>
+                </label>
+              )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      {/* 에디터 영역 */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex justify-between mb-4">
-            <Tabs 
-              defaultValue={editorMode} 
-              value={editorMode}
-              onValueChange={(value) => setEditorMode(value as "normal" | "html")}
-              className="w-[200px]"
-            >
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="normal" className="flex items-center gap-2">
-                  <FileText size={16} />
-                  일반
-                </TabsTrigger>
-                <TabsTrigger value="html" className="flex items-center gap-2">
-                  <Code size={16} />
-                  HTML
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
-            <Button
-              variant="outline"
-              onClick={() => setShowPreview(!showPreview)}
-              className="flex items-center gap-2"
-            >
-              <Eye size={16} />
-              {showPreview ? "에디터로 돌아가기" : "미리보기"}
-            </Button>
-          </div>
-
-          {showPreview ? (
-            <div className="min-h-[400px] border rounded-md p-4 bg-white">
-              {renderHtmlPreview()}
-            </div>
-          ) : (
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => onContentChange(e.target.value)}
-              className="min-h-[400px] font-mono text-base leading-relaxed resize-y"
-              placeholder={
-                editorMode === "normal" 
-                  ? "포스트 내용을 작성하세요" 
-                  : "<h1>HTML 태그를 사용하여 포스트를 작성하세요</h1>"
-              }
-            />
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 메타데이터 영역 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardContent className="p-6">
             <Label htmlFor="metaDescription">메타태그 입력</Label>
@@ -136,6 +138,7 @@ export const PostEditor = ({
             />
           </CardContent>
         </Card>
+
         <Card>
           <CardContent className="p-6">
             <Label htmlFor="tags">태그입력</Label>
@@ -150,15 +153,75 @@ export const PostEditor = ({
         </Card>
       </div>
 
-      {/* 미리보기 영역 */}
-      <Card>
-        <CardContent className="p-6">
-          <Label>미리보기</Label>
-          <div className="mt-2 min-h-[400px] border rounded-md p-4 bg-white">
-            {renderHtmlPreview()}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Main Editor Area */}
+      <div className="md:col-span-2 space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <Input
+              value={title}
+              onChange={(e) => onTitleChange(e.target.value)}
+              placeholder="포스트 제목을 입력하세요"
+              className="text-lg font-medium mb-4"
+            />
+
+            <div className="flex justify-between mb-4">
+              <Tabs 
+                defaultValue={editorMode} 
+                value={editorMode}
+                onValueChange={(value) => setEditorMode(value as "normal" | "html")}
+                className="w-[200px]"
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="normal" className="flex items-center gap-2">
+                    <FileText size={16} />
+                    일반
+                  </TabsTrigger>
+                  <TabsTrigger value="html" className="flex items-center gap-2">
+                    <Code size={16} />
+                    HTML
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowPreview(!showPreview)}
+                className="flex items-center gap-2"
+              >
+                <Eye size={16} />
+                {showPreview ? "에디터로 돌아가기" : "미리보기"}
+              </Button>
+            </div>
+
+            {showPreview ? (
+              <div className="min-h-[400px] border rounded-md p-4 bg-white">
+                {renderHtmlPreview()}
+              </div>
+            ) : (
+              <Textarea
+                value={editorMode === "html" ? content : content.replace(/<[^>]*>/g, '')}
+                onChange={(e) => handleContentChange(e.target.value)}
+                className="min-h-[400px] font-mono text-base leading-relaxed resize-y"
+                placeholder={
+                  editorMode === "normal" 
+                    ? "포스트 내용을 작성하세요" 
+                    : "<h1>HTML 태그를 사용하여 포스트를 작성하세요</h1>"
+                }
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Preview Area */}
+        <Card>
+          <CardContent className="p-6">
+            <Label>미리보기</Label>
+            <div className="mt-2 min-h-[400px] border rounded-md p-4 bg-white">
+              {renderHtmlPreview()}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
