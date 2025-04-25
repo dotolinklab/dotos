@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,7 +65,7 @@ const WritePost = ({ categories }: WritePostProps) => {
           category: selectedCategory,
           excerpt,
           status: 'published',
-          thumbnail_url: thumbnailUrl
+          thumbnail_url: thumbnailUrl  // 수정된 부분: 명시적으로 thumbnail_url 설정
         }]);
 
       if (error) throw error;
