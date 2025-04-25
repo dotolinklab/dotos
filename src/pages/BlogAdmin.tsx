@@ -15,19 +15,39 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { Image } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const BlogAdmin = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !content) {
-      toast.error("제목과 내용을 모두 입력해주세요.");
+    if (!title || !content || !category) {
+      toast.error("제목, 내용, 카테고리를 모두 입력해주세요.");
       return;
     }
-    toast.success("포스트가 저장되었습니다!");
+
+    try {
+      const { error } = await supabase.from('blog_posts').insert({
+        title,
+        content,
+        category,
+        author: '관리자',
+        excerpt: content.substring(0, 150) + '...'
+      });
+
+      if (error) throw error;
+
+      toast.success("포스트가 저장되었습니다!");
+      setTitle("");
+      setContent("");
+      setCategory("");
+    } catch (error) {
+      console.error('Error inserting post:', error);
+      toast.error("포스트 저장에 실패했습니다.");
+    }
   };
 
   return (
@@ -83,9 +103,10 @@ const BlogAdmin = () => {
                       <SelectValue placeholder="카테고리 선택" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tech">기술</SelectItem>
-                      <SelectItem value="life">라이프스타일</SelectItem>
-                      <SelectItem value="design">디자인</SelectItem>
+                      <SelectItem value="AI 소식">AI 소식</SelectItem>
+                      <SelectItem value="부업하기">부업하기</SelectItem>
+                      <SelectItem value="렌탈솔루션">렌탈솔루션</SelectItem>
+                      <SelectItem value="배움터">배움터</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -114,3 +135,4 @@ const BlogAdmin = () => {
 };
 
 export default BlogAdmin;
+
