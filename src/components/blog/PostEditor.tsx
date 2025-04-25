@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -30,6 +29,7 @@ interface PostEditorProps {
   thumbnailPreview: string;
   onThumbnailChange: (file: File) => void;
   onThumbnailRemove: () => void;
+  onSubmit?: () => void; // Add optional submit handler
 }
 
 export const PostEditor = ({
@@ -45,7 +45,8 @@ export const PostEditor = ({
   onCategoryChange,
   thumbnailPreview,
   onThumbnailChange,
-  onThumbnailRemove
+  onThumbnailRemove,
+  onSubmit, // Add to destructured props
 }: PostEditorProps) => {
   const [editorMode, setEditorMode] = useState<"normal" | "html">("normal");
   const [showPreview, setShowPreview] = useState(false);
@@ -93,23 +94,7 @@ export const PostEditor = ({
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Left Sidebar */}
       <div className="space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <Label>카테고리</Label>
-            <Select value={category} onValueChange={onCategoryChange}>
-              <SelectTrigger className="w-full mt-2">
-                <SelectValue placeholder="카테고리 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="AI 소식">AI 소식</SelectItem>
-                <SelectItem value="부업하기">부업하기</SelectItem>
-                <SelectItem value="렌탈솔루션">렌탈솔루션</SelectItem>
-                <SelectItem value="배움터">배움터</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-
+        {/* Remove the duplicate category card */}
         <PostSettings
           category={category}
           onCategoryChange={onCategoryChange}

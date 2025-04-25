@@ -1,4 +1,3 @@
-
 import AdminSidebar from "@/components/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
@@ -72,7 +71,10 @@ const BlogEditPost = () => {
             </Button>
           </div>
 
-          <form id="post-edit-form" onSubmit={handleSubmit}>
+          <form 
+            id="post-edit-form" 
+            onSubmit={handleSubmit}
+          >
             <PostEditor
               title={title}
               content={content}
@@ -87,6 +89,7 @@ const BlogEditPost = () => {
               thumbnailPreview={thumbnailPreview}
               onThumbnailChange={setThumbnail}
               onThumbnailRemove={() => setThumbnailPreview("")}
+              onSubmit={handleSubmit} // Optional submit handler
             />
           </form>
         </div>
