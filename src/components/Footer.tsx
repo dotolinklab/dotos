@@ -20,9 +20,9 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-r from-purple-100 via-purple-50 to-purple-100 border-t border-purple-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-3 gap-8">
-          {/* Logo and Description - Left */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Logo and Description - Top on mobile, Left on desktop */}
           <div className="col-span-1">
             <Link to="/" className="flex items-center">
               <span className="text-xl font-bold text-purple-700">도토링크 블로그</span>
@@ -33,18 +33,18 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Empty Space - Center */}
-          <div className="col-span-1" />
+          {/* Empty Space - Hidden on mobile */}
+          <div className="hidden lg:block" />
 
-          {/* Navigation Links - Right */}
-          <div className="col-span-1 grid grid-cols-2 gap-8">
+          {/* Navigation Links - Bottom on mobile, Right on desktop */}
+          <div className="col-span-1 sm:col-span-1 grid grid-cols-2 gap-6 sm:gap-8">
             {/* Menu Section */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <h3 className="font-bold text-purple-800">메뉴</h3>
               <ul className="space-y-2">
                 {footerLinks.main.map((link) => (
                   <li key={link.href}>
-                    <Link to={link.href} className="text-sm text-purple-600 hover:text-purple-800 transition-colors">
+                    <Link to={link.href} className="text-xs sm:text-sm text-purple-600 hover:text-purple-800 transition-colors">
                       {link.name}
                     </Link>
                   </li>
@@ -53,12 +53,12 @@ const Footer = () => {
             </div>
 
             {/* Resources Section */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <h3 className="font-bold text-purple-800">자료실</h3>
               <ul className="space-y-2">
                 {footerLinks.resources.map((link) => (
                   <li key={link.href}>
-                    <Link to={link.href} className="text-sm text-purple-600 hover:text-purple-800 transition-colors">
+                    <Link to={link.href} className="text-xs sm:text-sm text-purple-600 hover:text-purple-800 transition-colors">
                       {link.name}
                     </Link>
                   </li>
@@ -68,8 +68,8 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t border-purple-200">
-          <p className="text-center text-sm text-purple-600">
+        <div className="mt-8 pt-6 sm:mt-12 sm:pt-8 border-t border-purple-200">
+          <p className="text-center text-xs sm:text-sm text-purple-600">
             &copy; {new Date().getFullYear()} 도토링크 블로그. All rights reserved.
           </p>
         </div>

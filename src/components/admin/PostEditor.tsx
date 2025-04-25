@@ -1,6 +1,7 @@
 
 import React from 'react';
 import EditorTabs from './editor/EditorTabs';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PostEditorProps {
   content: string;
@@ -9,8 +10,10 @@ interface PostEditorProps {
 }
 
 const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="w-full">
+    <div className={`w-full ${isMobile ? 'px-0' : 'px-2'}`}>
       <EditorTabs
         content={content}
         onContentChange={onContentChange}

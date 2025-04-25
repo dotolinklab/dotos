@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -13,8 +14,12 @@ const Navigation = () => {
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    // Close mobile menu when route changes
+    setIsMobileMenuOpen(false);
+    
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   const navLinks = [
     { name: "홈", href: "/" },
@@ -25,7 +30,7 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed w-full z-50 bg-white shadow-md border-b border-gray-100">
+    <nav className={`fixed w-full z-50 bg-white ${isScrolled ? 'shadow-md' : ''} border-b border-gray-100 transition-all duration-300`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
@@ -55,15 +60,16 @@ const Navigation = () => {
 
           <Button 
             variant="ghost" 
-            className="md:hidden text-purple-700"
+            className="md:hidden text-purple-700 p-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
-            <Menu className="h-6 w-6" />
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
 
         {isMobileMenuOpen && (
-          <div className="md:hidden">
+          <div className="md:hidden animate-fade-in">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white rounded-md shadow-lg">
               {navLinks.map(link => (
                 <Link

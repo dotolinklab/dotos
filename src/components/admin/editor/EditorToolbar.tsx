@@ -2,6 +2,7 @@
 import React, { useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Image } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface EditorToolbarProps {
   onImageUpload: (file: File) => void;
@@ -9,6 +10,7 @@ interface EditorToolbarProps {
 
 const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const handleImageButtonClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,9 +38,11 @@ const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
           type="button"
           variant="outline"
           onClick={handleImageButtonClick}
+          size={isMobile ? "sm" : "default"}
+          className={isMobile ? "text-xs" : ""}
         >
-          <Image className="mr-2" />
-          이미지 추가
+          <Image className={`${isMobile ? 'mr-1 h-4 w-4' : 'mr-2'}`} />
+          {isMobile ? "이미지" : "이미지 추가"}
         </Button>
       </div>
     </div>
