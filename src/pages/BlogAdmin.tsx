@@ -5,7 +5,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
-import { useNavigate } from "react-router-dom";
 import { PostEditor } from "@/components/blog/PostEditor";
 import { PostSettings } from "@/components/blog/PostSettings";
 
@@ -15,7 +14,8 @@ const BlogAdmin = () => {
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const navigate = useNavigate();
+  const [metaDescription, setMetaDescription] = useState("");
+  const [tags, setTags] = useState("");
   
   const { uploadFile } = useSupabaseStorage('blog-images');
 
@@ -42,14 +42,19 @@ const BlogAdmin = () => {
       return;
     }
 
+    // 태그 문자열을 배열로 변환
+    const keywordsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+
     try {
       const { error } = await supabase.from('blog_posts').insert({
         title,
         content,
         category,
         author: '관리자',
-        excerpt: content.substring(0, 150) + '...',
-        thumbnail_url: imageUrl
+        excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...',
+        thumbnail_url: imageUrl,
+        meta_description: metaDescription || null,
+        meta_keywords: keywordsArray.length > 0 ? keywordsArray : null
       });
 
       if (error) throw error;
@@ -59,6 +64,8 @@ const BlogAdmin = () => {
       setContent("");
       setCategory("");
       setImageUrl(null);
+      setMetaDescription("");
+      setTags("");
     } catch (error) {
       console.error('Error inserting post:', error);
       toast.error("포스트 저장에 실패했습니다.");
@@ -83,19 +90,27 @@ const BlogAdmin = () => {
 
           <form id="post-form" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <PostEditor
-                title={title}
-                content={content}
-                onTitleChange={setTitle}
-                onContentChange={setContent}
-              />
-              <PostSettings
-                category={category}
-                onCategoryChange={setCategory}
-                thumbnailPreview={imageUrl || ""}
-                onThumbnailChange={handleImageUpload}
-                onThumbnailRemove={() => setImageUrl(null)}
-              />
+              <div className="md:col-span-2">
+                <PostEditor
+                  title={title}
+                  content={content}
+                  onTitleChange={setTitle}
+                  onContentChange={setContent}
+                  metaDescription={metaDescription}
+                  onMetaDescriptionChange={setMetaDescription}
+                  tags={tags}
+                  onTagsChange={setTags}
+                />
+              </div>
+              <div>
+                <PostSettings
+                  category={category}
+                  onCategoryChange={setCategory}
+                  thumbnailPreview={imageUrl || ""}
+                  onThumbnailChange={handleImageUpload}
+                  onThumbnailRemove={() => setImageUrl(null)}
+                />
+              </div>
             </div>
           </form>
         </div>

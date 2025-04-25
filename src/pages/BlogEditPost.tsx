@@ -25,11 +25,21 @@ const BlogEditPost = () => {
     setThumbnailPreview,
     isLoading,
     isSubmitting,
+    metaDescription,
+    setMetaDescription,
+    keywords,
+    setKeywords,
     handleSubmit
   } = usePostEdit({
     postId,
     onSuccess: () => {}
   });
+
+  const keywordsString = Array.isArray(keywords) ? keywords.join(', ') : '';
+  const handleKeywordsChange = (value: string) => {
+    const keywordsArray = value.split(',').map(tag => tag.trim()).filter(tag => tag);
+    setKeywords(keywordsArray);
+  };
 
   if (isLoading) {
     return (
@@ -65,19 +75,27 @@ const BlogEditPost = () => {
 
           <form id="post-edit-form" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <PostEditor
-                title={title}
-                content={content}
-                onTitleChange={setTitle}
-                onContentChange={setContent}
-              />
-              <PostSettings
-                category={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                thumbnailPreview={thumbnailPreview}
-                onThumbnailChange={setThumbnail}
-                onThumbnailRemove={() => setThumbnailPreview("")}
-              />
+              <div className="md:col-span-2">
+                <PostEditor
+                  title={title}
+                  content={content}
+                  onTitleChange={setTitle}
+                  onContentChange={setContent}
+                  metaDescription={metaDescription || ""}
+                  onMetaDescriptionChange={setMetaDescription}
+                  tags={keywordsString}
+                  onTagsChange={handleKeywordsChange}
+                />
+              </div>
+              <div>
+                <PostSettings
+                  category={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                  thumbnailPreview={thumbnailPreview}
+                  onThumbnailChange={setThumbnail}
+                  onThumbnailRemove={() => setThumbnailPreview("")}
+                />
+              </div>
             </div>
           </form>
         </div>
