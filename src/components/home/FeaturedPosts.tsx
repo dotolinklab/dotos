@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +14,7 @@ interface Post {
   created_at: string;
   category: string;
   thumbnail_url: string | null;
+  meta_description?: string;  // Add this field to support meta description
 }
 
 const FeaturedPosts = () => {
@@ -117,12 +119,14 @@ const FeaturedPosts = () => {
                           </span>
                           <span className="text-sm text-purple-700 font-medium">{post.category}</span>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 group-hover:text-purple-700 transition-colors line-clamp-2">
+                        <h3 className="text-xl font-bold mb-2 group-hover:text-purple-700 transition-colors line-clamp-2">
                           {post.title}
                         </h3>
-                        <p className="text-gray-600 mb-6 line-clamp-3">
-                          {post.excerpt}
-                        </p>
+                        {post.meta_description && (
+                          <p className="text-gray-600 mb-4 line-clamp-3">
+                            {post.meta_description}
+                          </p>
+                        )}
                         <div className="text-sm text-gray-500">
                           <span>{formatDate(post.created_at)}</span>
                         </div>
