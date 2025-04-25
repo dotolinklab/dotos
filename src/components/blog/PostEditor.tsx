@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Eye, FileText, Code, Upload } from "lucide-react";
+import { useState, useRef } from "react";
+import { Eye, FileText, Code, Upload, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
+import { toast } from "sonner";
 
 interface PostEditorProps {
   title: string;
@@ -42,6 +44,8 @@ export const PostEditor = ({
 }: PostEditorProps) => {
   const [editorMode, setEditorMode] = useState<"normal" | "html">("normal");
   const [showPreview, setShowPreview] = useState(false);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const { uploadFile } = useSupabaseStorage('blog-images');
 
   const handleContentChange = (value: string) => {
     if (editorMode === "html") {
@@ -53,6 +57,34 @@ export const PostEditor = ({
         .map(line => `<p>${line}</p>`)
         .join('');
       onContentChange(htmlContent);
+    }
+  };
+
+  const insertImageIntoContent = async (file: File) => {
+    try {
+      const publicUrl = await uploadFile(file);
+      if (!publicUrl || !textAreaRef.current) return;
+
+      const imageHtml = `\n<img src="${publicUrl}" alt="Blog content image" class="max-w-full h-auto my-4" />\n`;
+      
+      const cursorPosition = textAreaRef.current.selectionStart;
+      const textBeforeCursor = textAreaRef.current.value.substring(0, cursorPosition);
+      const textAfterCursor = textAreaRef.current.value.substring(cursorPosition);
+      
+      const newContent = textBeforeCursor + imageHtml + textAfterCursor;
+      onContentChange(newContent);
+      
+      toast.success("이미지가 성공적으로 삽입되었습니다!");
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error("이미지 업로드에 실패했습니다.");
+    }
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      insertImageIntoContent(file);
     }
   };
 
@@ -164,7 +196,7 @@ export const PostEditor = ({
               className="text-lg font-medium mb-4"
             />
 
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between items-center mb-4">
               <Tabs 
                 defaultValue={editorMode} 
                 value={editorMode}
@@ -183,14 +215,40 @@ export const PostEditor = ({
                 </TabsList>
               </Tabs>
               
-              <Button
-                variant="outline"
-                onClick={() => setShowPreview(!showPreview)}
-                className="flex items-center gap-2"
-              >
-                <Eye size={16} />
-                {showPreview ? "에디터로 돌아가기" : "미리보기"}
-              </Button>
+              <div className="flex items-center gap-2">
+                {editorMode === "html" && (
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="content-image-upload"
+                    />
+                    <label htmlFor="content-image-upload">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex items-center gap-2"
+                        asChild
+                      >
+                        <span>
+                          <Image size={16} />
+                          이미지 삽입
+                        </span>
+                      </Button>
+                    </label>
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  onClick={() => setShowPreview(!showPreview)}
+                  className="flex items-center gap-2"
+                >
+                  <Eye size={16} />
+                  {showPreview ? "에디터로 돌아가기" : "미리보기"}
+                </Button>
+              </div>
             </div>
 
             {showPreview ? (
@@ -199,6 +257,7 @@ export const PostEditor = ({
               </div>
             ) : (
               <Textarea
+                ref={textAreaRef}
                 value={editorMode === "html" ? content : content.replace(/<[^>]*>/g, '')}
                 onChange={(e) => handleContentChange(e.target.value)}
                 className="min-h-[400px] font-mono text-base leading-relaxed resize-y"
