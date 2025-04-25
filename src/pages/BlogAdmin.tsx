@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Image, Upload } from "lucide-react";
+import { Image, Upload, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 
 const BlogAdmin = () => {
   const [title, setTitle] = useState("");
@@ -23,29 +24,21 @@ const BlogAdmin = () => {
   const [category, setCategory] = useState("");
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  
+  const { uploadFile } = useSupabaseStorage('blog-images');
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
     
     const file = e.target.files[0];
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    
     setUploading(true);
     
     try {
-      const { data, error } = await supabase.storage
-        .from('blog-images')
-        .upload(fileName, file);
-
-      if (error) throw error;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(fileName);
-
-      setImageUrl(publicUrl);
-      toast.success("이미지가 업로드되었습니다!");
+      const publicUrl = await uploadFile(file);
+      if (publicUrl) {
+        setImageUrl(publicUrl);
+        toast.success("이미지가 업로드되었습니다!");
+      }
     } catch (error) {
       console.error('Error uploading image:', error);
       toast.error("이미지 업로드에 실패했습니다.");
