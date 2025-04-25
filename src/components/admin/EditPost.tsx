@@ -68,6 +68,10 @@ const EditPost = ({ categories }: EditPostProps) => {
     }
   };
 
+  const handleContentChange = (newContent: string) => {
+    setContent(newContent);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-8 border border-purple-100">
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -101,7 +105,7 @@ const EditPost = ({ categories }: EditPostProps) => {
 
         <PostEditor
           content={content}
-          onContentChange={(e) => setContent(e.target.value)}
+          onContentChange={handleContentChange}
           onImageUpload={handleContentImageUpload}
         />
 

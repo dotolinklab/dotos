@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +42,10 @@ const WritePost = ({ categories }: WritePostProps) => {
       setContent(prev => prev + imageTag);
       toast.success('이미지가 업로드되었습니다.');
     }
+  };
+
+  const handleContentChange = (newContent: string) => {
+    setContent(newContent);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,7 +126,7 @@ const WritePost = ({ categories }: WritePostProps) => {
 
         <PostEditor
           content={content}
-          onContentChange={(e) => setContent(e.target.value)}
+          onContentChange={handleContentChange}
           onImageUpload={handleContentImageUpload}
         />
 

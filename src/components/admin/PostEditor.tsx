@@ -5,7 +5,7 @@ import EditorTabs from './editor/EditorTabs';
 interface PostEditorProps {
   content: string;
   onContentChange: (content: string) => void;
-  onImageUpload: () => void;
+  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps) => {
