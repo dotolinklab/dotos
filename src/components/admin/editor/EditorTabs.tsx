@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import EditorToolbar from './EditorToolbar';
@@ -9,22 +9,21 @@ import EditorPreview from './EditorPreview';
 interface EditorTabsProps {
   content: string;
   onContentChange: (content: string) => void;
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>, cursorPosition?: number) => void;
+  onImageUpload: (file: File, cursorPosition: number | null) => Promise<void>;
 }
 
 const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps) => {
   const [activeTab, setActiveTab] = useState<string>('normal');
   const [cursorPosition, setCursorPosition] = useState<number | null>(null);
-  const normalEditorRef = useRef<HTMLDivElement>(null);
-  const htmlEditorRef = useRef<HTMLDivElement>(null);
-
-  const handleCursorPositionChange = (position: number) => {
+  
+  // Handle cursor position tracking
+  const handleCursorPositionChange = (position: number | null) => {
     setCursorPosition(position);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Pass the current cursor position along with the event
-    onImageUpload(e, cursorPosition ?? undefined);
+  // Handle image upload with cursor position
+  const handleImageUpload = (file: File) => {
+    onImageUpload(file, cursorPosition);
   };
 
   return (

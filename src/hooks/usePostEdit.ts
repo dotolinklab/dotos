@@ -21,6 +21,7 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
   const [status, setStatus] = useState('published');
   const [metaDescription, setMetaDescription] = useState('');
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { uploadFile: uploadToImages } = useSupabaseStorage('images');
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
+        setIsLoading(true);
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
@@ -51,10 +53,14 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
       } catch (error) {
         console.error('Error fetching post:', error);
         toast.error('포스트를 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchPost();
+    if (postId) {
+      fetchPost();
+    }
   }, [postId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,7 +74,11 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
         thumbnailUrl = await uploadToImages(thumbnail) || '';
       }
 
-      const excerpt = content.substring(0, 150) + (content.length > 150 ? '...' : '');
+      // Create excerpt from content (strip HTML tags)
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = content;
+      const textContent = tempDiv.textContent || tempDiv.innerText || '';
+      const excerpt = textContent.substring(0, 150) + (textContent.length > 150 ? '...' : '');
 
       const { error } = await supabase
         .from('blog_posts')
@@ -87,7 +97,11 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
       if (error) throw error;
 
       toast.success('블로그 포스트가 업데이트되었습니다.');
-      onSuccess?.();
+      
+      if (onSuccess) {
+        onSuccess();
+      }
+      
       navigate('/admin/blog');
     } catch (error) {
       console.error('Error updating post:', error);
@@ -115,6 +129,7 @@ export const usePostEdit = ({ postId, onSuccess }: UsePostEditProps) => {
     setMetaDescription,
     keywords,
     setKeywords,
+    isLoading,
     isSubmitting,
     handleSubmit
   };

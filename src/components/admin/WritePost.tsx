@@ -11,9 +11,10 @@ import { useSupabaseStorage } from '@/hooks/useSupabaseStorage';
 
 interface WritePostProps {
   categories: string[];
+  onSuccess?: () => void;
 }
 
-const WritePost = ({ categories }: WritePostProps) => {
+const WritePost = ({ categories, onSuccess }: WritePostProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -32,24 +33,18 @@ const WritePost = ({ categories }: WritePostProps) => {
     setThumbnailPreview(URL.createObjectURL(file));
   };
 
-  const handleContentImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, cursorPosition?: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleContentImageUpload = async (file: File, cursorPosition: number | null) => {
     try {
       toast.info('이미지를 업로드 중입니다...', { duration: 2000 });
       const imageUrl = await uploadToPostImg(file);
       
       if (imageUrl) {
-        // Create the image tag for insertion
-        const imageTag = `![${file.name}](${imageUrl})`;
+        // Create image HTML tag
+        const imgHtmlTag = `<img src="${imageUrl}" alt="${file.name}" />`;
         
         setContent(prevContent => {
           // If we have a cursor position, insert at that position
-          if (cursorPosition !== undefined) {
-            // For HTML mode, create an actual image tag
-            const imgHtmlTag = `<img src="${imageUrl}" alt="${file.name}" />`;
-            
+          if (cursorPosition !== null) {
             // Split the content at cursor position and insert the image
             const before = prevContent.substring(0, cursorPosition);
             const after = prevContent.substring(cursorPosition);
@@ -57,7 +52,7 @@ const WritePost = ({ categories }: WritePostProps) => {
           }
           
           // Fallback: append to the end if no cursor position
-          return prevContent + imageTag;
+          return prevContent + imgHtmlTag;
         });
         
         toast.success('이미지가 업로드되었습니다.');
@@ -83,8 +78,11 @@ const WritePost = ({ categories }: WritePostProps) => {
         thumbnailUrl = await uploadToImages(thumbnail) || '';
       }
 
-      // Create excerpt from content
-      const excerpt = content.substring(0, 150) + (content.length > 150 ? '...' : '');
+      // Create excerpt from content (strip HTML tags)
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = content;
+      const textContent = tempDiv.textContent || tempDiv.innerText || '';
+      const excerpt = textContent.substring(0, 150) + (textContent.length > 150 ? '...' : '');
 
       const { error } = await supabase
         .from('blog_posts')
@@ -105,6 +103,11 @@ const WritePost = ({ categories }: WritePostProps) => {
       setSelectedCategory(categories[0]);
       setThumbnail(null);
       setThumbnailPreview('');
+      
+      // Notify parent component of success
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error('Error saving post:', error);
       toast.error('포스트 저장 중 오류가 발생했습니다.');

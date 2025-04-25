@@ -49,24 +49,18 @@ const EditPost = ({ categories }: EditPostProps) => {
     setThumbnailPreview(URL.createObjectURL(file));
   };
 
-  const handleContentImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, cursorPosition?: number) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleContentImageUpload = async (file: File, cursorPosition: number | null) => {
     try {
       toast.info('이미지를 업로드 중입니다...', { duration: 2000 });
       const imageUrl = await uploadToPostImg(file);
       
       if (imageUrl) {
-        // Create the image tag for insertion
-        const imageTag = `![${file.name}](${imageUrl})`;
+        // Create image HTML tag
+        const imgHtmlTag = `<img src="${imageUrl}" alt="${file.name}" />`;
         
         setContent(prevContent => {
           // If we have a cursor position, insert at that position
-          if (cursorPosition !== undefined) {
-            // For HTML mode, create an actual image tag
-            const imgHtmlTag = `<img src="${imageUrl}" alt="${file.name}" />`;
-            
+          if (cursorPosition !== null) {
             // Split the content at cursor position and insert the image
             const before = prevContent.substring(0, cursorPosition);
             const after = prevContent.substring(cursorPosition);
@@ -74,7 +68,7 @@ const EditPost = ({ categories }: EditPostProps) => {
           }
           
           // Fallback: append to the end if no cursor position
-          return prevContent + imageTag;
+          return prevContent + imgHtmlTag;
         });
         
         toast.success('이미지가 업로드되었습니다.');

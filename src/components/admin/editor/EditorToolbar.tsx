@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Image } from 'lucide-react';
 
 interface EditorToolbarProps {
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageUpload: (file: File) => void;
 }
 
 const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
@@ -15,13 +15,20 @@ const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
     fileInputRef.current?.click();
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onImageUpload(file);
+    }
+  };
+
   return (
-    <div className="flex items-center justify-end mb-2 sticky top-0 bg-white z-10 py-2">
+    <div className="flex items-center justify-end mb-2 sticky top-0 bg-white z-10 py-2 border-b">
       <div>
         <input
           type="file"
           ref={fileInputRef}
-          onChange={onImageUpload}
+          onChange={handleFileChange}
           accept="image/*"
           style={{ display: 'none' }}
         />

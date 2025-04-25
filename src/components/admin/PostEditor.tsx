@@ -1,11 +1,11 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import EditorTabs from './editor/EditorTabs';
 
 interface PostEditorProps {
   content: string;
   onContentChange: (content: string) => void;
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>, cursorPosition?: number) => void;
+  onImageUpload: (file: File, cursorPosition: number | null) => Promise<void>;
 }
 
 const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps) => {
