@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -118,27 +117,21 @@ const FeaturedPosts = () => {
                           </span>
                           <span className="text-sm text-purple-700 font-medium">{post.category}</span>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 group-hover:text-purple-700 transition-colors">
+                        <h3 className="text-xl font-bold mb-3 group-hover:text-purple-700 transition-colors line-clamp-2">
                           {post.title}
                         </h3>
                         <p className="text-gray-600 mb-6 line-clamp-3">
                           {post.excerpt}
                         </p>
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center">
-                              <span className="text-purple-700 text-xs font-medium">{post.author[0]}</span>
-                            </div>
-                            <span>{post.author}</span>
-                          </div>
+                        <div className="text-sm text-gray-500">
                           <span>{formatDate(post.created_at)}</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                 </Link>
-              )}
-            )}
+              );
+            })}
           </div>
         )}
       </div>
