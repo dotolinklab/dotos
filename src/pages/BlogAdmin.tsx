@@ -59,7 +59,7 @@ const BlogAdmin = () => {
             </TabsContent>
 
             <TabsContent value="posts">
-              <PostManagement posts={posts} categories={categories} />
+              <PostManagement categories={categories} />
             </TabsContent>
 
             <TabsContent value="write">
