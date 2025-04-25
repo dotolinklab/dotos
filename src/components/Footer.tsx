@@ -29,7 +29,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-bold text-purple-700">My Personal Blog</span>
+              <span className="text-xl font-bold text-purple-700">도토링크 블로그</span>
             </Link>
             <p className="mt-4 text-sm text-gray-600">
               AI 최신 소식과 부업, 렌탈, 그리고<br />
