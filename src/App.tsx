@@ -8,11 +8,9 @@ import SideHustles from "./pages/SideHustles";
 import RentalSolution from "./pages/RentalSolution";
 import Learning from "./pages/Learning";
 import NotFound from "./pages/NotFound";
-import BlogAdmin from "./pages/BlogAdmin";
 import PostDetail from "./pages/PostDetail";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import EditBlogPost from "./pages/EditBlogPost";
 
 const queryClient = new QueryClient();
 
@@ -32,8 +30,6 @@ const App = () => (
           <Route path="/rental/:postId" element={<PostDetail />} />
           <Route path="/learning" element={<Learning />} />
           <Route path="/learning/:postId" element={<PostDetail />} />
-          <Route path="/admin/blog" element={<BlogAdmin />} />
-          <Route path="/admin/blog/edit/:postId" element={<EditBlogPost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
