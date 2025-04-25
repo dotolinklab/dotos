@@ -9,7 +9,7 @@ import EditorPreview from './EditorPreview';
 interface EditorTabsProps {
   content: string;
   onContentChange: (content: string) => void;
-  onImageUpload: () => void;
+  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps) => {
