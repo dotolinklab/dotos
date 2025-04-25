@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Eye, FileText, Code, Upload, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { toast } from "sonner";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 
 interface PostEditorProps {
   title: string;
@@ -51,7 +51,6 @@ export const PostEditor = ({
     if (editorMode === "html") {
       onContentChange(value);
     } else {
-      // Convert plain text to HTML when in normal mode
       const htmlContent = value
         .split('\n')
         .map(line => `<p>${line}</p>`)
@@ -98,9 +97,8 @@ export const PostEditor = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {/* Left Sidebar */}
-      <div className="space-y-6">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardContent className="p-6">
             <Label>카테고리</Label>
@@ -118,6 +116,104 @@ export const PostEditor = ({
           </CardContent>
         </Card>
 
+        <Card>
+          <CardContent className="p-6">
+            <Label>메타태그 입력</Label>
+            <Textarea
+              value={metaDescription}
+              onChange={(e) => onMetaDescriptionChange(e.target.value)}
+              placeholder="검색 엔진을 위한 메타 설명을 입력하세요"
+              className="mt-2"
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel defaultSize={60}>
+          <Card>
+            <CardContent className="p-6">
+              <Input
+                value={title}
+                onChange={(e) => onTitleChange(e.target.value)}
+                placeholder="포스트 제목을 입력하세요"
+                className="text-lg font-medium mb-4"
+              />
+
+              <div className="flex justify-between items-center mb-4">
+                <Tabs 
+                  defaultValue={editorMode} 
+                  value={editorMode}
+                  onValueChange={(value) => setEditorMode(value as "normal" | "html")}
+                  className="w-[200px]"
+                >
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="normal" className="flex items-center gap-2">
+                      <FileText size={16} />
+                      일반
+                    </TabsTrigger>
+                    <TabsTrigger value="html" className="flex items-center gap-2">
+                      <Code size={16} />
+                      HTML
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+
+                {editorMode === "html" && (
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="content-image-upload"
+                    />
+                    <label htmlFor="content-image-upload">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex items-center gap-2"
+                        asChild
+                      >
+                        <span>
+                          <Image size={16} />
+                          이미지 삽입
+                        </span>
+                      </Button>
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              <Textarea
+                ref={textAreaRef}
+                value={editorMode === "html" ? content : content.replace(/<[^>]*>/g, '')}
+                onChange={(e) => handleContentChange(e.target.value)}
+                className="min-h-[400px] font-mono text-base leading-relaxed resize-y"
+                placeholder={
+                  editorMode === "normal" 
+                    ? "포스트 내용을 작성하세요" 
+                    : "<h1>HTML 태그를 사용하여 포스트를 작성하세요</h1>"
+                }
+              />
+            </CardContent>
+          </Card>
+        </ResizablePanel>
+
+        <ResizableHandle />
+
+        <ResizablePanel defaultSize={40}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="prose prose-purple max-w-none">
+                {renderHtmlPreview()}
+              </div>
+            </CardContent>
+          </Card>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardContent className="p-6">
             <Label>대표 이미지</Label>
@@ -160,124 +256,13 @@ export const PostEditor = ({
 
         <Card>
           <CardContent className="p-6">
-            <Label htmlFor="metaDescription">메타태그 입력</Label>
+            <Label>태그입력</Label>
             <Textarea
-              id="metaDescription"
-              value={metaDescription}
-              onChange={(e) => onMetaDescriptionChange(e.target.value)}
-              className="mt-2 resize-none h-[100px]"
-              placeholder="검색 엔진을 위한 메타 설명을 입력하세요"
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <Label htmlFor="tags">태그입력</Label>
-            <Textarea
-              id="tags"
               value={tags}
               onChange={(e) => onTagsChange(e.target.value)}
-              className="mt-2 resize-none h-[100px]"
               placeholder="태그는 쉼표(,)로 구분하여 입력하세요"
+              className="mt-2"
             />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Editor Area */}
-      <div className="md:col-span-2 space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <Input
-              value={title}
-              onChange={(e) => onTitleChange(e.target.value)}
-              placeholder="포스트 제목을 입력하세요"
-              className="text-lg font-medium mb-4"
-            />
-
-            <div className="flex justify-between items-center mb-4">
-              <Tabs 
-                defaultValue={editorMode} 
-                value={editorMode}
-                onValueChange={(value) => setEditorMode(value as "normal" | "html")}
-                className="w-[200px]"
-              >
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="normal" className="flex items-center gap-2">
-                    <FileText size={16} />
-                    일반
-                  </TabsTrigger>
-                  <TabsTrigger value="html" className="flex items-center gap-2">
-                    <Code size={16} />
-                    HTML
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-              
-              <div className="flex items-center gap-2">
-                {editorMode === "html" && (
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="content-image-upload"
-                    />
-                    <label htmlFor="content-image-upload">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="flex items-center gap-2"
-                        asChild
-                      >
-                        <span>
-                          <Image size={16} />
-                          이미지 삽입
-                        </span>
-                      </Button>
-                    </label>
-                  </div>
-                )}
-                <Button
-                  variant="outline"
-                  onClick={() => setShowPreview(!showPreview)}
-                  className="flex items-center gap-2"
-                >
-                  <Eye size={16} />
-                  {showPreview ? "에디터로 돌아가기" : "미리보기"}
-                </Button>
-              </div>
-            </div>
-
-            {showPreview ? (
-              <div className="min-h-[400px] border rounded-md p-4 bg-white">
-                {renderHtmlPreview()}
-              </div>
-            ) : (
-              <Textarea
-                ref={textAreaRef}
-                value={editorMode === "html" ? content : content.replace(/<[^>]*>/g, '')}
-                onChange={(e) => handleContentChange(e.target.value)}
-                className="min-h-[400px] font-mono text-base leading-relaxed resize-y"
-                placeholder={
-                  editorMode === "normal" 
-                    ? "포스트 내용을 작성하세요" 
-                    : "<h1>HTML 태그를 사용하여 포스트를 작성하세요</h1>"
-                }
-              />
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Preview Area */}
-        <Card>
-          <CardContent className="p-6">
-            <Label>미리보기</Label>
-            <div className="mt-2 min-h-[400px] border rounded-md p-4 bg-white">
-              {renderHtmlPreview()}
-            </div>
           </CardContent>
         </Card>
       </div>
