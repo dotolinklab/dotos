@@ -17,8 +17,8 @@ const Hero = () => {
         <source src="https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/video//heroback.mp4" type="video/mp4" />
       </video>
       
-      {/* Purple Overlay */}
-      <div className="absolute inset-0 bg-brand-purple/40 z-[-1]"></div>
+      {/* Purple Overlay with Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/50 to-brand-lightPurple/40 z-[-1]"></div>
 
       <div className="max-w-6xl mx-auto text-center z-10">
         <div className="inline-block bg-white/20 text-white px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
@@ -32,7 +32,7 @@ const Hero = () => {
           비개발자도 쉽게 이해할 수 있는 AI 관련소식과 유용한 소식을 소개합니다
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Button asChild size="lg" className="bg-white text-brand-purple hover:bg-purple-50">
+          <Button asChild size="lg" className="bg-white text-brand-purple hover:bg-purple-50 font-medium">
             <Link to="/ai-news">최신 AI 소식 보기</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-white/50 text-white hover:bg-white/10 hover:text-white">
@@ -48,4 +48,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
