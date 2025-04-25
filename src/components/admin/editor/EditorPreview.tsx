@@ -6,9 +6,15 @@ interface EditorPreviewProps {
   content: string;
   onContentChange: (content: string) => void;
   mode?: 'normal' | 'html';
+  onCursorPositionChange?: (position: number) => void;
 }
 
-const EditorPreview = ({ content, onContentChange, mode = 'normal' }: EditorPreviewProps) => {
+const EditorPreview = ({ 
+  content, 
+  onContentChange, 
+  mode = 'normal',
+  onCursorPositionChange
+}: EditorPreviewProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [cursorPosition, setCursorPosition] = useState<number | null>(null);
   
@@ -18,9 +24,15 @@ const EditorPreview = ({ content, onContentChange, mode = 'normal' }: EditorPrev
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       if (editorRef.current?.contains(range.startContainer)) {
-        setCursorPosition(range.startOffset);
+        const pos = range.startOffset;
+        setCursorPosition(pos);
+        if (onCursorPositionChange) {
+          onCursorPositionChange(pos);
+        }
+        return pos;
       }
     }
+    return cursorPosition;
   };
   
   // Restore cursor position after content changes
@@ -78,18 +90,16 @@ const EditorPreview = ({ content, onContentChange, mode = 'normal' }: EditorPrev
 
   // Function to handle content update with cursor position preservation
   const handleInputWithPreserveCursor = () => {
-    saveCursorPosition();
+    const position = saveCursorPosition();
     if (editorRef.current) {
       onContentChange(editorRef.current.innerHTML);
     }
+    return position;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'Delete') {
-      // Prevent default for these keys only if needed
-      e.stopPropagation();
-      saveCursorPosition();
-    }
+    // We don't want to prevent default behavior for normal typing keys
+    saveCursorPosition();
   };
 
   const focusEditor = () => {

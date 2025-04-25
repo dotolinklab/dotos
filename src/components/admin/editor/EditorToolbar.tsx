@@ -5,18 +5,13 @@ import { Image } from 'lucide-react';
 
 interface EditorToolbarProps {
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  getCursorPosition?: () => number | null;
 }
 
-const EditorToolbar = ({ onImageUpload, getCursorPosition }: EditorToolbarProps) => {
+const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageButtonClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Store current cursor position before opening file dialog
-    if (getCursorPosition) {
-      getCursorPosition();
-    }
     fileInputRef.current?.click();
   };
 

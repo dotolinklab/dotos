@@ -32,7 +32,7 @@ const WritePost = ({ categories }: WritePostProps) => {
     setThumbnailPreview(URL.createObjectURL(file));
   };
 
-  const handleContentImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContentImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, cursorPosition?: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -41,11 +41,25 @@ const WritePost = ({ categories }: WritePostProps) => {
       const imageUrl = await uploadToPostImg(file);
       
       if (imageUrl) {
+        // Create the image tag for insertion
         const imageTag = `![${file.name}](${imageUrl})`;
+        
         setContent(prevContent => {
-          // Insert at current position if possible, otherwise append
+          // If we have a cursor position, insert at that position
+          if (cursorPosition !== undefined) {
+            // For HTML mode, create an actual image tag
+            const imgHtmlTag = `<img src="${imageUrl}" alt="${file.name}" />`;
+            
+            // Split the content at cursor position and insert the image
+            const before = prevContent.substring(0, cursorPosition);
+            const after = prevContent.substring(cursorPosition);
+            return before + imgHtmlTag + after;
+          }
+          
+          // Fallback: append to the end if no cursor position
           return prevContent + imageTag;
         });
+        
         toast.success('이미지가 업로드되었습니다.');
       }
     } catch (error) {
@@ -80,7 +94,7 @@ const WritePost = ({ categories }: WritePostProps) => {
           category: selectedCategory,
           excerpt,
           status: 'published',
-          thumbnail_url: thumbnailUrl  // 수정된 부분: 명시적으로 thumbnail_url 설정
+          thumbnail_url: thumbnailUrl
         }]);
 
       if (error) throw error;

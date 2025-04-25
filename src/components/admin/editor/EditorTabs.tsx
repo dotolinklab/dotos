@@ -9,7 +9,7 @@ import EditorPreview from './EditorPreview';
 interface EditorTabsProps {
   content: string;
   onContentChange: (content: string) => void;
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>, cursorPosition?: number) => void;
 }
 
 const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps) => {
@@ -18,25 +18,13 @@ const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps
   const normalEditorRef = useRef<HTMLDivElement>(null);
   const htmlEditorRef = useRef<HTMLDivElement>(null);
 
-  const getCursorPosition = () => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return cursorPosition;
-    
-    const range = selection.getRangeAt(0);
-    const activeEditor = activeTab === 'normal' ? normalEditorRef.current : htmlEditorRef.current;
-    
-    if (activeEditor?.contains(range.startContainer)) {
-      const position = range.startOffset;
-      setCursorPosition(position);
-      return position;
-    }
-    
-    return cursorPosition;
+  const handleCursorPositionChange = (position: number) => {
+    setCursorPosition(position);
   };
 
-  // Insert image at cursor position helper function
-  const getEditorInsertPosition = () => {
-    return getCursorPosition();
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Pass the current cursor position along with the event
+    onImageUpload(e, cursorPosition ?? undefined);
   };
 
   return (
@@ -53,8 +41,7 @@ const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps
       </TabsList>
 
       <EditorToolbar 
-        onImageUpload={onImageUpload}
-        getCursorPosition={getEditorInsertPosition}
+        onImageUpload={handleImageUpload}
       />
       
       <TabsContent value="normal">
@@ -63,6 +50,7 @@ const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps
           content={content}
           onContentChange={onContentChange}
           mode="normal"
+          onCursorPositionChange={handleCursorPositionChange}
         />
       </TabsContent>
 
@@ -72,6 +60,7 @@ const EditorTabs = ({ content, onContentChange, onImageUpload }: EditorTabsProps
           content={content}
           onContentChange={onContentChange}
           mode="html"
+          onCursorPositionChange={handleCursorPositionChange}
         />
       </TabsContent>
 
