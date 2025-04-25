@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -9,6 +8,7 @@ import RentalSolution from "./pages/RentalSolution";
 import Learning from "./pages/Learning";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import BlogAdmin from "./pages/BlogAdmin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 
@@ -27,6 +27,7 @@ const App = () => (
           <Route path="/rental" element={<RentalSolution />} />
           <Route path="/learning" element={<Learning />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin/blog" element={<BlogAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
