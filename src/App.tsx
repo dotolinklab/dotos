@@ -32,6 +32,7 @@ const App = () => (
           <Route path="/learning" element={<Learning />} />
           <Route path="/learning/:postId" element={<PostDetail />} />
           <Route path="/admin/blog" element={<BlogAdmin />} />
+          <Route path="/admin/blog/posts" element={<BlogAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

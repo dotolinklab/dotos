@@ -1,16 +1,25 @@
 
-import Navigation from "@/components/Navigation";
+import AdminSidebar from "@/components/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Image } from "lucide-react";
 
 const BlogAdmin = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,65 +27,88 @@ const BlogAdmin = () => {
       toast.error("제목과 내용을 모두 입력해주세요.");
       return;
     }
-    // Here we would typically save to a backend
     toast.success("포스트가 저장되었습니다!");
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navigation />
-      <div className="container max-w-4xl mx-auto pt-32 pb-20 px-4">
-        <h1 className="text-3xl font-bold text-purple-800 mb-8">새 글 작성하기</h1>
-        
-        <Card className="bg-white shadow-lg">
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="title" className="text-lg text-purple-900">
-                  제목
-                </Label>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full text-lg"
-                  placeholder="제목을 입력하세요"
-                />
-              </div>
+    <div className="min-h-screen bg-gray-50 flex">
+      <AdminSidebar />
+      <main className="flex-1 ml-60">
+        <div className="container max-w-4xl mx-auto py-8 px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-2xl font-bold text-purple-800">블로그 포스트 작성</h1>
+            <Button
+              type="submit"
+              form="post-form"
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              작성하기
+            </Button>
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="content" className="text-lg text-purple-900">
-                  내용
-                </Label>
-                <Textarea
-                  id="content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="min-h-[400px] text-base"
-                  placeholder="내용을 입력하세요"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="md:col-span-2">
+              <CardContent className="p-6">
+                <form id="post-form" onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">제목</Label>
+                    <Input
+                      id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="포스트 제목을 입력하세요"
+                    />
+                  </div>
 
-              <div className="flex justify-end space-x-4 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="px-6"
-                  onClick={() => {
-                    setTitle("");
-                    setContent("");
-                  }}
-                >
-                  초기화
-                </Button>
-                <Button type="submit" className="px-6 bg-purple-600 hover:bg-purple-700">
-                  발행하기
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="content">내용</Label>
+                    <Textarea
+                      id="content"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="min-h-[400px]"
+                      placeholder="포스트 내용을 작성하세요 (마크다운 지원)"
+                    />
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-2">
+                  <Label>카테고리</Label>
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="카테고리 선택" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tech">기술</SelectItem>
+                      <SelectItem value="life">라이프스타일</SelectItem>
+                      <SelectItem value="design">디자인</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>대표 이미지</Label>
+                  <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                    <div className="flex flex-col items-center gap-2">
+                      <Image className="text-gray-400" size={32} />
+                      <p className="text-sm text-gray-500">
+                        이미지를 업로드하세요
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        PNG, JPG, GIF (최대 5MB)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
