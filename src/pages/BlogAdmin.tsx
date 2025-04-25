@@ -13,26 +13,50 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 const BlogAdmin = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('AI 소식');
-
-  // Sample categories from main page
-  const categories = ['AI 소식', '부업하기', '렌탈솔루션', '배움터'];
+  const [categories, setCategories] = useState(['AI 소식', '부업하기', '렌탈솔루션', '배움터']);
+  const [newCategory, setNewCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   // Sample posts data for the management tab
-  const samplePosts = [
+  const [posts] = useState([
     { id: 1, title: 'ChatGPT-5 출시', category: 'AI 소식', date: '2025-04-21', status: '게시됨' },
     { id: 2, title: '2025년 가장 수익성 높은 온라인 부업 TOP 5', category: '부업하기', date: '2025-04-18', status: '게시됨' },
     { id: 3, title: '비개발자를 위한 AI 활용법: 기초 가이드', category: '배움터', date: '2025-04-15', status: '게시됨' },
     { id: 4, title: '임시 저장된 글', category: '렌탈솔루션', date: '2025-04-22', status: '임시저장' },
-  ];
+  ]);
+
+  const handleAddCategory = () => {
+    if (!newCategory.trim()) {
+      toast.error('카테고리 이름을 입력해주세요.');
+      return;
+    }
+    if (categories.includes(newCategory)) {
+      toast.error('이미 존재하는 카테고리입니다.');
+      return;
+    }
+    setCategories([...categories, newCategory]);
+    setNewCategory('');
+    toast.success('새로운 카테고리가 추가되었습니다.');
+  };
+
+  const handleDeleteCategory = (categoryToDelete: string) => {
+    if (posts.some(post => post.category === categoryToDelete)) {
+      toast.error('해당 카테고리에 포스트가 존재하여 삭제할 수 없습니다.');
+      return;
+    }
+    setCategories(categories.filter(category => category !== categoryToDelete));
+    if (selectedCategory === categoryToDelete) {
+      setSelectedCategory(categories[0]);
+    }
+    toast.success('카테고리가 삭제되었습니다.');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here we'll add the blog post submission logic later
     toast.success('블로그 포스트가 저장되었습니다.');
     setTitle('');
     setContent('');
-    setCategory('AI 소식');
+    setSelectedCategory(categories[0]);
   };
 
   return (
@@ -98,7 +122,9 @@ const BlogAdmin = () => {
                   {categories.map((cat) => (
                     <div key={cat} className="p-4 border rounded-lg text-center">
                       <p className="font-semibold text-purple-700">{cat}</p>
-                      <p className="text-2xl font-bold mt-2">{Math.floor(Math.random() * 10)}</p>
+                      <p className="text-2xl font-bold mt-2">
+                        {posts.filter(post => post.category === cat).length}
+                      </p>
                       <p className="text-sm text-gray-500">게시물</p>
                     </div>
                   ))}
@@ -175,8 +201,8 @@ const BlogAdmin = () => {
                     <Label htmlFor="category">카테고리</Label>
                     <select
                       id="category"
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
                       className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {categories.map((cat) => (
@@ -229,31 +255,46 @@ const BlogAdmin = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="blogDescription">블로그 설명</Label>
-                    <Textarea id="blogDescription" defaultValue="AI 관련 최신 소식과 정보를 제공하는 블로그입니다." placeholder="블로그 설명을 입력하세요" />
+                    <Textarea 
+                      id="blogDescription" 
+                      defaultValue="AI 관련 최신 소식과 정보를 제공하는 블로그입니다." 
+                      placeholder="블로그 설명을 입력하세요" 
+                    />
                   </div>
                   
-                  <h4 className="text-lg font-semibold mt-8 mb-4 text-purple-700">카테고리 관리</h4>
-                  
                   <div className="space-y-4">
-                    {categories.map((cat, index) => (
+                    <h4 className="text-lg font-semibold mt-8 mb-4 text-purple-700">카테고리 관리</h4>
+                    
+                    {categories.map((category, index) => (
                       <div key={index} className="flex items-center gap-4">
-                        <Input defaultValue={cat} />
-                        <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
+                        <Input value={category} disabled />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteCategory(category)}
+                          className="text-red-500 hover:text-red-600"
+                          disabled={posts.some(post => post.category === category)}
+                        >
                           삭제
                         </Button>
                       </div>
                     ))}
                     
                     <div className="flex items-center gap-4 mt-4">
-                      <Input placeholder="새 카테고리 이름" />
-                      <Button variant="outline">추가</Button>
+                      <Input
+                        placeholder="새 카테고리 이름"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(e.target.value)}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleAddCategory}
+                      >
+                        추가
+                      </Button>
                     </div>
-                  </div>
-                  
-                  <div className="flex justify-end mt-8">
-                    <Button className="bg-purple-700 hover:bg-purple-800">
-                      설정 저장하기
-                    </Button>
                   </div>
                 </div>
               </div>
