@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 
 interface AdminDashboardProps {
   posts: Array<{
-    id: number;
+    id: string;
     title: string;
     category: string;
     date: string;

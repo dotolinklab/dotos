@@ -10,7 +10,7 @@ interface BlogSettingsProps {
   categories: string[];
   setCategories: (categories: string[]) => void;
   posts: Array<{
-    id: number;
+    id: string;
     title: string;
     category: string;
     date: string;
