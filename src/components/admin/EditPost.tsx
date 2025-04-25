@@ -88,11 +88,24 @@ const EditPost = ({ categories }: EditPostProps) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const imageUrl = await uploadToPostImg(file);
-    if (imageUrl) {
-      const imageTag = `\n![${file.name}](${imageUrl})\n`;
-      setContent(prev => prev + imageTag);
-      toast.success('이미지가 업로드되었습니다.');
+    try {
+      toast.info('이미지를 업로드 중입니다...', { duration: 2000 });
+      const imageUrl = await uploadToPostImg(file);
+      
+      if (imageUrl) {
+        // Insert markdown image tag at cursor position or at the end
+        const imageTag = `![${file.name}](${imageUrl})`;
+        
+        // Append the image tag to the content
+        setContent(prev => {
+          return prev + '\n\n' + imageTag + '\n\n';
+        });
+        
+        toast.success('이미지가 업로드되었습니다.');
+      }
+    } catch (error) {
+      console.error('Image upload error:', error);
+      toast.error('이미지 업로드에 실패했습니다.');
     }
   };
 

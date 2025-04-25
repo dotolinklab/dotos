@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Image } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface PostEditorProps {
   content: string;
@@ -32,14 +33,27 @@ const PostEditor = ({ content, onContentChange, onImageUpload }: PostEditorProps
           onChange={onImageUpload}
         />
       </div>
-      <Textarea
-        id="content"
-        value={content}
-        onChange={onContentChange}
-        placeholder="블로그 내용을 입력하세요"
-        className="min-h-[400px] text-base"
-        required
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="content-editor" className="text-sm text-muted-foreground mb-2">편집</Label>
+          <Textarea
+            id="content"
+            value={content}
+            onChange={onContentChange}
+            placeholder="블로그 내용을 입력하세요"
+            className="min-h-[400px] text-base"
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="content-preview" className="text-sm text-muted-foreground mb-2">미리보기</Label>
+          <div 
+            className="border rounded-md p-4 min-h-[400px] overflow-y-auto bg-white"
+          >
+            <ReactMarkdown>{content}</ReactMarkdown>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -4,14 +4,64 @@ import Navigation from '@/components/Navigation';
 import { Pencil } from 'lucide-react';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import EditPost from '@/components/admin/EditPost';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const EditBlogPost = () => {
   const [categories, setCategories] = useState(['AI 소식', '부업하기', '렌탈솔루션', '배움터']);
   const { postId } = useParams<{ postId: string }>();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [postExists, setPostExists] = useState(false);
 
-  if (!postId) {
-    return <div>잘못된 접근입니다.</div>;
+  useEffect(() => {
+    const checkPostExists = async () => {
+      if (!postId) {
+        toast.error('잘못된 접근입니다.');
+        navigate('/admin/blog');
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('id')
+          .eq('id', postId)
+          .single();
+
+        if (error || !data) {
+          toast.error('포스트를 찾을 수 없습니다.');
+          navigate('/admin/blog');
+          return;
+        }
+
+        setPostExists(true);
+      } catch (error) {
+        console.error('Error checking post:', error);
+        toast.error('포스트를 확인하는 중 오류가 발생했습니다.');
+        navigate('/admin/blog');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkPostExists();
+  }, [postId, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500">포스트를 확인하는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!postId || !postExists) {
+    return null; // Will redirect via the useEffect
   }
 
   return (
