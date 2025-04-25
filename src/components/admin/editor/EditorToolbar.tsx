@@ -13,7 +13,10 @@ const EditorToolbar = ({ onImageUpload }: EditorToolbarProps) => {
       <Button
         type="button"
         variant="outline"
-        onClick={onImageUpload}
+        onClick={(e) => {
+          e.preventDefault(); // Prevent losing focus
+          onImageUpload();
+        }}
       >
         <Image className="mr-2" />
         이미지 추가

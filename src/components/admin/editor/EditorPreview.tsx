@@ -9,17 +9,34 @@ interface EditorPreviewProps {
 
 const EditorPreview = ({ content, onContentChange }: EditorPreviewProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'Delete') {
-      e.stopPropagation();
+  
+  // New function to preserve cursor position before/after content changes
+  const handleInputWithPreserveCursor = () => {
+    if (editorRef.current) {
+      // Get current selection before content change
+      const selection = window.getSelection();
+      const range = selection?.getRangeAt(0);
+      
+      // Update the content
+      const newContent = editorRef.current.innerHTML;
+      onContentChange(newContent);
+      
+      // Wait for React to re-render, then restore cursor position
+      setTimeout(() => {
+        if (editorRef.current && range && selection) {
+          // Try to place cursor at the same position
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }, 0);
     }
   };
 
-  const handleContentChange = () => {
-    if (editorRef.current) {
-      const newContent = editorRef.current.innerHTML;
-      onContentChange(newContent);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'Delete') {
+      // Allow the default behavior for these keys
+      // but prevent the event from propagating to parent elements
+      e.stopPropagation();
     }
   };
 
@@ -49,8 +66,8 @@ const EditorPreview = ({ content, onContentChange }: EditorPreviewProps) => {
         suppressContentEditableWarning
         onClick={focusEditorWithCursorPos}
         onKeyDown={handleKeyDown}
-        onInput={handleContentChange}
-        onBlur={handleContentChange}
+        onInput={handleInputWithPreserveCursor}
+        onBlur={handleInputWithPreserveCursor}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </ScrollArea>
