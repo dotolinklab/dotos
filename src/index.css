@@ -1,7 +1,14 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://oyheezfoazrhqusyoibw.supabase.co/storage/v1/object/public/fonts/Paperlogy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @layer base {
   :root {
@@ -92,11 +99,11 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Noto Sans KR', sans-serif !important;
+    font-family: 'Paperlogy', 'Noto Sans KR', sans-serif !important;
   }
   
   h1, h2, h3, h4, h5, h6, p, span, div {
-    font-family: 'Noto Sans KR', sans-serif !important;
+    font-family: 'Paperlogy', 'Noto Sans KR', sans-serif !important;
   }
 }
 
